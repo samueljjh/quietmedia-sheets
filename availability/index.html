@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Availability — Quiet Media</title>
 <meta name="description" content="Days Quiet Media is available for filming and production work.">
 <meta name="robots" content="noindex">
@@ -10,78 +10,111 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap">
 <style>
-/* Layout: one calm page. A headline that answers "when are you next free", then months you swipe through, then a way to ask. Soft surfaces, sharp page, warm neutrals; the only colour is the state of a day. */
+/* Layout: phone first. Free days are the bright thing on the page; everything else recedes. Month, week and list views share one data model.
+   Marks follow the studio app: solid square = filming, hollow square = editing (often movable), dot = other commitment. */
 :root{--bg:#0A0A0A;--surface:#141413;--raise:#1D1C1A;--raise2:#262522;--fg:#FFFFFF;--muted:#9A918A;--faint:#5E5852;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.18);--tan:#8A7F76;--sand:#DDD5C3;
-  --free:#A7B3A0;--limited:#DDD5C3;--busy:#5E5852;--film:#F0617A;--edit:#5E93F0;
   --font:'DM Sans','Helvetica Neue',Arial,sans-serif;--ease:cubic-bezier(.16,1,.3,1);--r:14px;--rxl:22px;color-scheme:dark}
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;--free:#5F6E58;--limited:#8A7F76;--busy:#C9C3BA;color-scheme:light}}
-:root[data-theme="light"]{--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;--free:#5F6E58;--limited:#8A7F76;--busy:#C9C3BA;color-scheme:light}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}}
+:root[data-theme="light"]{--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg)}
+html{-webkit-text-size-adjust:100%}html,body{background:var(--bg)}
 body{font-family:var(--font);font-weight:300;color:var(--fg);font-size:15px;line-height:1.5;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));-webkit-font-smoothing:antialiased;overscroll-behavior-x:none}
 body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");background-size:200px}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
-.wrap{max-width:720px;margin:0 auto;padding-block:22px 60px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:34px}
+.wrap{max-width:720px;margin:0 auto;padding-block:20px 120px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}
 .brand{display:flex;align-items:center;gap:10px}.brand svg{width:26px;height:26px}.brand b{font-weight:300;font-size:19px;letter-spacing:-.2px}
-.ib{width:38px;height:38px;border-radius:50%;background:var(--raise);display:grid;place-items:center;transition:transform .15s var(--ease),background .2s}
-.ib:active{transform:scale(.92)}.ib svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ib{width:38px;height:38px;border-radius:50%;background:var(--raise);display:grid;place-items:center;flex:none;transition:transform .15s var(--ease),background .2s}
+.ib:active{transform:scale(.92)}.ib[disabled]{opacity:.3}.ib svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .rv{opacity:0;transform:translateY(14px);animation:rv .7s var(--ease) forwards}
 @keyframes rv{to{opacity:1;transform:none}}
 .eyebrow{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--tan)}
-h1{font-size:clamp(34px,7vw,52px);font-weight:300;letter-spacing:-1px;line-height:1.02;text-wrap:balance;margin:8px 0 10px}
-.lead{color:var(--muted);max-width:52ch;font-size:16px}
-.hero{padding:26px 24px;border-radius:var(--rxl);background:var(--surface);margin-bottom:14px}
-.next{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;margin-top:22px}
-.tile{border-radius:var(--r);padding:14px 16px;background:var(--raise)}
-.tile small{display:block;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tan);margin-bottom:4px}
-.tile b{font-size:22px;font-weight:300;letter-spacing:-.4px;line-height:1.1;display:block}
-.tile span{color:var(--muted);font-size:13px}
-.cal{border-radius:var(--rxl);background:var(--surface);padding:18px 18px 16px;overflow:hidden}
-.calbar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.calbar b{font-size:22px;font-weight:300;letter-spacing:-.4px;flex:1;min-width:0}
-.calbar b span{color:var(--muted);font-size:15px;margin-left:8px}
+h1{font-size:clamp(32px,7vw,50px);font-weight:300;letter-spacing:-1px;line-height:1.02;text-wrap:balance;margin:8px 0 10px}
+.lead{color:var(--muted);max-width:52ch;font-size:15px}
+.hero{padding:24px 22px;border-radius:var(--rxl);background:var(--surface);margin-bottom:12px}
+.next{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:8px;margin-top:20px}
+.tile{border-radius:var(--r);padding:12px 14px;background:var(--raise)}
+.tile small{display:block;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tan);margin-bottom:3px}
+.tile b{font-size:20px;font-weight:300;letter-spacing:-.4px;line-height:1.1;display:block}
+.tile span{color:var(--muted);font-size:12px}
+/* legend: the same marks as the studio app */
+.mk{display:inline-block;width:12px;height:12px;border-radius:4px;background:var(--fg);flex:none}
+.mk.e{background:transparent;border:2px solid var(--fg)}
+.mk.b{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.mk.f{background:var(--fg)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:14px 2px 0;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend .sw{width:12px;height:12px;border-radius:4px;background:var(--fg)}
+.legend .sw.m{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-strong)}.legend .sw.x{background:var(--raise);box-shadow:inset 0 0 0 1px var(--line)}
+/* calendar card */
+.cal{border-radius:var(--rxl);background:var(--surface);padding:16px 14px 14px;overflow:hidden}
+.calbar{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.calbar b{font-size:21px;font-weight:300;letter-spacing:-.4px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calbar b span{color:var(--muted);font-size:14px;margin-left:8px}
+.seg{display:inline-flex;background:var(--raise);border-radius:999px;padding:3px;gap:2px;margin-bottom:12px}
+.seg button{height:32px;padding:0 13px;border-radius:999px;font-size:13px;font-weight:500;color:var(--muted);transition:background .15s,color .15s}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 .dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:center;margin-bottom:6px}
 .stage{touch-action:pan-y}
-.stage.sl{animation:sl .36s var(--ease)}.stage.sr{animation:sr .36s var(--ease)}
-@keyframes sl{from{transform:translateX(26px);opacity:0}}@keyframes sr{from{transform:translateX(-26px);opacity:0}}
+.stage.sl{animation:sl .36s var(--ease)}.stage.sr{animation:sr .36s var(--ease)}.stage.zi{animation:zi .36s var(--ease)}
+@keyframes sl{from{transform:translateX(26px);opacity:0}}@keyframes sr{from{transform:translateX(-26px);opacity:0}}@keyframes zi{from{transform:scale(.97);opacity:0}}
 .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
-.d{aspect-ratio:1/1.08;border-radius:12px;background:var(--raise);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative;min-width:0;transition:transform .18s var(--ease),background .2s,box-shadow .2s;animation:pop .5s var(--ease) both}
+.d{aspect-ratio:1/1.1;border-radius:12px;background:var(--raise);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative;min-width:0;padding:0;transition:transform .18s var(--ease),background .2s,box-shadow .2s,opacity .2s;animation:pop .5s var(--ease) both;color:var(--muted)}
 @keyframes pop{from{opacity:0;transform:scale(.86)}}
 .d.out{visibility:hidden}
-.d .n{font-size:14px;font-variant-numeric:tabular-nums}
-.d.past{opacity:.35}.d.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.d.off .n{color:var(--faint)}
-.d.free{background:color-mix(in srgb,var(--free) 22%,var(--raise))}
-.d.limited{background:color-mix(in srgb,var(--limited) 22%,var(--raise))}
-.d.busy{background:var(--raise);opacity:.75}
-.d.today .n{font-weight:500;text-decoration:underline;text-underline-offset:4px}
-.d.sel{box-shadow:0 0 0 2px var(--fg);transform:scale(1.04);z-index:1}
-.d:not(.off):not(.past):hover{transform:translateY(-2px)}
-.d:not(.off):not(.past):active{transform:scale(.94)}
-.pips{display:flex;gap:4px;height:7px}
-.pip{width:7px;height:7px;border-radius:50%;background:var(--free)}
-.pip.filming{background:var(--film)}.pip.edit{background:var(--edit)}.pip.busy{background:var(--busy)}
-.legend{display:flex;gap:14px;flex-wrap:wrap;margin:14px 2px 0;font-size:12px;color:var(--muted)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
-.people{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.d .n{font-size:14px;font-variant-numeric:tabular-nums;line-height:1}
+.d.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line);opacity:.5}
+.d.past{opacity:.25}
+.d.free{background:var(--fg);color:var(--bg)}.d.free .n{font-weight:500}
+.d.maybe{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-strong);color:var(--fg)}.d.maybe .n{font-weight:400}
+.d.booked{background:var(--raise);opacity:.55}
+.d.today::after{content:'';position:absolute;bottom:5px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.7}
+.d.sel{box-shadow:0 0 0 2px var(--fg),0 0 0 5px var(--bg);transform:scale(1.05);z-index:1}
+.d:not([disabled]):hover{transform:translateY(-2px)}.d:not([disabled]):active{transform:scale(.94)}
+.d .mks{display:flex;gap:4px;height:12px;align-items:center}
+.d.free .mk.e{border-color:var(--bg)}.d.free .mk.f{background:var(--bg)}
+.d .mk.e{border-color:var(--fg)}.d.booked .mk{opacity:.8}
+/* week */
+.week{display:flex;flex-direction:column;gap:6px}
+.wd{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 10px;border-radius:var(--r);background:var(--raise);text-align:left;color:var(--fg);transition:transform .15s var(--ease),background .2s}
+.wd.free{background:var(--fg);color:var(--bg)}.wd.maybe{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-strong)}
+.wd.off,.wd.booked{opacity:.5}.wd.past{opacity:.3}
+.wd.sel{box-shadow:0 0 0 2px var(--fg),0 0 0 5px var(--bg)}
+.wd:not([disabled]):active{transform:scale(.985)}
+.wd .dl{display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.wd .dl small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}.wd .dl b{font-size:20px;font-weight:300}
+.wd .st{min-width:0}.wd .st b{font-weight:500;font-size:14px;display:block}.wd .st span{font-size:12px;opacity:.75;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wd .mks{display:flex;gap:6px;align-items:center}
+.wd.free .mk.e{border-color:var(--bg)}.wd.free .mk.f{background:var(--bg)}
+/* list */
+.list{display:flex;flex-direction:column;gap:6px}
+.lh{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tan);margin:12px 4px 2px}
+.lh:first-child{margin-top:0}
+.pw{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .who{display:inline-flex;align-items:center;gap:7px;padding:5px 10px 5px 6px;border-radius:999px;background:var(--raise);font-size:13px}
 .who i{width:22px;height:22px;border-radius:50%;background:var(--fg);color:var(--bg);display:inline-grid;place-items:center;font-size:10px;font-weight:500;font-style:normal}
-.detail{margin-top:14px;border-radius:var(--r);background:var(--raise);padding:14px 16px;display:none;animation:rv .4s var(--ease)}
+.detail{margin-top:12px;border-radius:var(--r);background:var(--raise);padding:12px 14px;display:none;animation:rv .4s var(--ease)}
 .detail.on{display:block}
-.detail b{font-weight:400}
-.detail .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--fg);color:var(--bg);text-decoration:none;font-size:14px;font-weight:500;min-height:44px;transition:transform .12s}
+.detail b{font-weight:400}.detail p{color:var(--muted);font-size:13px;margin-top:4px}
+.detail .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--fg);color:var(--bg);text-decoration:none;font-size:14px;font-weight:500;min-height:44px;transition:transform .12s;border:0}
 .btn:active{transform:scale(.97)}.btn.ghost{background:var(--raise2);color:var(--fg)}
-.ask{margin-top:14px;padding:22px 24px;border-radius:var(--rxl);background:var(--surface)}
-.ask h2{font-size:22px;font-weight:300;letter-spacing:-.3px;margin-bottom:6px}
-.ask p{color:var(--muted);margin-bottom:14px;max-width:52ch}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.ask{margin-top:12px;padding:20px 22px;border-radius:var(--rxl);background:var(--surface)}
+.ask h2{font-size:21px;font-weight:300;letter-spacing:-.3px;margin-bottom:4px}
+.ask p{color:var(--muted);margin-bottom:12px;max-width:52ch;font-size:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--raise);font-size:13px}
+.chip.m{box-shadow:inset 0 0 0 1px var(--line-strong);background:transparent}
 .chip button{color:var(--muted);font-size:16px;line-height:1}
-.foot{font-size:12px;color:var(--muted);margin-top:24px;text-align:center}
+.bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;gap:8px;align-items:center;padding:8px 8px 8px 16px;border-radius:999px;background:var(--fg);color:var(--bg);box-shadow:0 14px 40px rgba(0,0,0,.35);transform:translateY(130%);transition:transform .45s var(--ease)}
+.bar.on{transform:none}
+.bar span{flex:1;font-size:14px;font-weight:500;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar a{background:var(--bg);color:var(--fg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;flex:none}
+.bar button{width:36px;height:36px;border-radius:50%;background:rgba(128,128,128,.25);flex:none;font-size:18px}
+@media (min-width:720px){.bar{left:auto;right:24px;width:380px}}
+.foot{font-size:12px;color:var(--muted);margin-top:22px;text-align:center}
 .err{padding:40px 0;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.rv,.d,.stage,.detail{animation:none!important;opacity:1}}
+@media (prefers-reduced-motion:reduce){.rv,.d,.stage,.detail{animation:none!important;opacity:1}.bar{transition:none}}
 </style>
 </head>
 <body>
@@ -90,52 +123,61 @@ h1{font-size:clamp(34px,7vw,52px);font-weight:300;letter-spacing:-1px;line-heigh
     <button class="ib" id="theme" aria-label="Switch light or dark"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg></button></div>
   <div id="app"><p class="err">Loading…</p></div>
 </div>
+<div class="bar" id="bar"><span id="bartxt"></span><a id="barlink" href="#">Enquire</a><button id="barclear" aria-label="Clear">×</button></div>
 <script>
 const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';
 const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok)throw new Error('rpc '+r.status);return r.json()};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad=n=>String(n).padStart(2,'0');const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const fmt=(d,o)=>d.toLocaleDateString('en-GB',o);const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
-/* theme */
+const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);const monday=d=>addD(d,-((d.getDay()+6)%7));
 const root=document.documentElement;try{const t=localStorage.getItem('qm-av-theme');if(t)root.dataset.theme=t}catch(e){}
 document.getElementById('theme').onclick=()=>{const dark=root.dataset.theme?root.dataset.theme==='dark':!matchMedia('(prefers-color-scheme: light)').matches;root.dataset.theme=dark?'light':'dark';try{localStorage.setItem('qm-av-theme',root.dataset.theme)}catch(e){}};
 (async()=>{
   const app=document.getElementById('app');let data;
   try{data=await rpc('get_availability',{p_slug:'quiet-media'});if(!data)throw 0}catch(e){app.innerHTML='<p class="err">Availability is not published right now. Email hello@quietmedia.co.uk and we will come back to you.</p>';return}
-  // Normalise old and new shapes: day → {s, by:{id:kind}}
-  const people=data.people||[{id:'qm',name:'Quiet Media'}];
+  const people=data.people||[{id:'qm',name:'Quiet Media'}];const email=data.email||'hello@quietmedia.co.uk';
   const days={};for(const [k,v] of Object.entries(data.days||{})){days[k]=typeof v==='string'?(v==='off'?'off':{s:v,by:{}}):v}
-  const today=new Date();today.setHours(0,0,0,0);const keys=Object.keys(days).sort();const first=keys[0]?new Date(keys[0]):today;const last=keys.length?new Date(keys[keys.length-1]):today;
-  const sel=new Set();let cur=new Date(today.getFullYear(),today.getMonth(),1);let anim='';let open=null;
-  const label=k=>k==='filming'?'Filming':k==='edit'?'Editing':k==='busy'?'Booked':'Free';
-  const nextFree=(pid)=>keys.find(k=>{const d=days[k];if(d==='off'||new Date(k)<today)return false;return pid?d.by[pid]==='free':d.s==='free'});
-  const freeIn=(n)=>keys.filter(k=>{const d=days[k];const dt=new Date(k);return d!=='off'&&dt>=today&&dt<new Date(today.getTime()+n*864e5)&&d.s!=='busy'}).length;
-  const hero=()=>{const nf=nextFree();const tiles=people.map(p=>{const k=nextFree(p.id);return '<div class="tile"><small>'+esc(p.name)+' next free</small><b>'+(k?fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'}):'Ask us')+'</b></div>'}).join('');
-    return '<section class="hero rv" style="animation-delay:.05s"><div class="eyebrow">Availability</div><h1>'+(nf?'Next free day: '+fmt(new Date(nf),{weekday:'long',day:'numeric',month:'long'}):'Fully booked for now')+'</h1><p class="lead">'+(people.length>1?'Who is free, day by day, for the next '+Math.round(keys.length/7)+' weeks. ':'Free days for filming and production work over the next '+Math.round(keys.length/7)+' weeks. ')+'Tap days to build an enquiry.</p>'+
-    '<div class="next">'+tiles+'<div class="tile"><small>Free days, next 30</small><b>'+freeIn(30)+'</b><span>of '+keys.filter(k=>days[k]!=='off'&&new Date(k)>=today&&new Date(k)<new Date(today.getTime()+30*864e5)).length+' working days</span></div></div></section>'};
-  const month=()=>{const m0=cur;const off=(m0.getDay()+6)%7;const dim=new Date(m0.getFullYear(),m0.getMonth()+1,0).getDate();let cells='';for(let i=0;i<off;i++)cells+='<div class="d out"></div>';
-    for(let n=1;n<=dim;n++){const dt=new Date(m0.getFullYear(),m0.getMonth(),n);const k=key(dt);const d=days[k];const past=dt<today;const known=d!=null&&d!=='off';
-      const cls=['d',past?'past':'',d==='off'?'off':'',known?d.s:(d==null?'off':''),key(dt)===key(today)?'today':'',sel.has(k)?'sel':''].filter(Boolean).join(' ');
-      const pips=known?'<span class="pips">'+people.map(p=>'<i class="pip '+esc(d.by[p.id]||'free')+'" title="'+esc(p.name)+': '+label(d.by[p.id]||'free')+'"></i>').join('')+'</span>':'<span class="pips"></span>';
-      cells+='<button class="'+cls+'" data-k="'+k+'" style="animation-delay:'+(n*12)+'ms" '+(known&&!past?'':'disabled')+'><span class="n">'+n+'</span>'+pips+'</button>'}
-    const prevOk=new Date(m0.getFullYear(),m0.getMonth(),0)>=new Date(first.getFullYear(),first.getMonth(),1),nextOk=new Date(m0.getFullYear(),m0.getMonth()+1,1)<=last;
-    return '<section class="cal rv" style="animation-delay:.15s"><div class="calbar"><b>'+MON[m0.getMonth()]+'<span>'+m0.getFullYear()+'</span></b><button class="ib" data-nav="-1" '+(prevOk?'':'disabled style="opacity:.3"')+' aria-label="Previous month"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" data-nav="1" '+(nextOk?'':'disabled style="opacity:.3"')+' aria-label="Next month"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>'+
-    '<div class="dow">'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="stage '+anim+'" id="stage"><div class="grid">'+cells+'</div></div>'+
-    '<div class="legend"><span><i style="background:var(--free)"></i>Free</span><span><i style="background:var(--film)"></i>Filming</span><span><i style="background:var(--edit)"></i>Editing</span><span><i style="background:var(--busy)"></i>Booked</span>'+(people.length>1?'<span style="margin-left:auto">One dot per person</span>':'')+'</div>'+
-    (people.length>1?'<div class="people">'+people.map(p=>'<span class="who"><i>'+esc(p.name.slice(0,1))+'</i>'+esc(p.name)+'</span>').join('')+'</div>':'')+
-    '<div class="detail'+(open?' on':'')+'" id="detail">'+(open?detail(open):'')+'</div></section>'};
-  const detail=k=>{const d=days[k];const dt=new Date(k);return '<b>'+fmt(dt,{weekday:'long',day:'numeric',month:'long'})+'</b><div class="row">'+people.map(p=>'<span class="who"><i>'+esc(p.name.slice(0,1))+'</i>'+esc(p.name)+' · '+label(d.by[p.id]||'free')+'</span>').join('')+'</div>'};
-  const ask=()=>{const list=[...sel].sort();const email=data.email||'hello@quietmedia.co.uk';const body='Hi, we would like to enquire about '+(list.length?list.map(k=>fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})).join(', '):'some dates')+'.\n\nProject: \nWhere: \nWhat we need: \n\nThanks,';
-    return '<section class="ask rv" style="animation-delay:.25s"><h2>'+(list.length?list.length+' day'+(list.length>1?'s':'')+' selected':'Want to book us?')+'</h2><p>'+(list.length?'Send these across and we will confirm within the day.':'Tap the days you have in mind, or just get in touch.')+'</p>'+(list.length?'<div class="chips">'+list.map(k=>'<span class="chip">'+fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})+'<button data-rm="'+k+'" aria-label="Remove">×</button></span>').join('')+'</div>':'')+
-    '<div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="mailto:'+esc(email)+'?subject='+encodeURIComponent('Availability enquiry'+(list.length?': '+list.map(k=>fmt(new Date(k),{day:'numeric',month:'short'})).join(', '):''))+'&body='+encodeURIComponent(body)+'">Enquire'+(list.length?' about these dates':'')+'</a>'+(list.length?'<button class="btn ghost" data-clear>Clear</button>':'')+'</div></section>'};
-  const render=()=>{app.innerHTML=hero()+month()+ask()+'<p class="foot">Updated '+fmt(new Date(data.updated||Date.now()),{day:'numeric',month:'long'})+' · quietmedia.co.uk</p>';anim=''};
-  app.addEventListener('click',e=>{const nav=e.target.closest('[data-nav]');if(nav&&!nav.disabled){const n=+nav.dataset.nav;cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);anim=n>0?'sl':'sr';render();return}
-    const d=e.target.closest('.d[data-k]');if(d&&!d.disabled){const k=d.dataset.k;if(open===k){if(sel.has(k))sel.delete(k);else sel.add(k)}open=k;render();return}
-    const rm=e.target.closest('[data-rm]');if(rm){sel.delete(rm.dataset.rm);render();return}
-    if(e.target.closest('[data-clear]')){sel.clear();render()}});
-  /* swipe between months */
+  const today=new Date();today.setHours(0,0,0,0);const keys=Object.keys(days).sort();const last=keys.length?new Date(keys[keys.length-1]):today;
+  /* A day is FREE if everyone shown is free; MAYBE if someone is free or someone is only editing (editing can often move); BOOKED otherwise. */
+  const stateOf=k=>{const d=days[k];const dt=new Date(k);if(!d||d==='off')return 'off';if(dt<today)return 'past';const v=people.map(p=>d.by[p.id]||(people.length===1&&!Object.keys(d.by).length?(d.s==='free'?'free':'busy'):'free'));
+    if(v.every(x=>x==='free'))return 'free';if(v.some(x=>x==='free'||x==='edit'))return 'maybe';return 'booked'};
+  const label={free:'Free',edit:'Editing',filming:'Filming',busy:'Booked'};const words={free:'Free',maybe:'Possibly',booked:'Booked',off:'',past:''};
+  const explain=k=>{const d=days[k];if(!d||d==='off')return '';const parts=people.map(p=>{const v=d.by[p.id]||'free';return esc(p.name)+' · '+label[v]+(v==='edit'?' (may be movable)':'')});return parts.join(' · ')};
+  const mks=k=>{const d=days[k];if(!d||d==='off')return '';return '<span class="mks">'+people.map(p=>{const v=d.by[p.id]||'free';return v==='filming'?'<i class="mk f" title="Filming"></i>':v==='edit'?'<i class="mk e" title="Editing, may be movable"></i>':v==='busy'?'<i class="mk b" title="Booked"></i>':''}).join('')+'</span>'};
+  const selectable=k=>['free','maybe'].includes(stateOf(k));
+  const sel=new Set();let view='month',cur=new Date(today.getFullYear(),today.getMonth(),1),wk=monday(today),anim='',open=null;
+  try{const v=localStorage.getItem('qm-av-view');if(v)view=v}catch(e){}
+  const nextOf=(st,pid)=>keys.find(k=>{const d=days[k];if(!d||d==='off'||new Date(k)<today)return false;return pid?(d.by[pid]||'free')==='free':stateOf(k)===st});
+  const count=(n,st)=>keys.filter(k=>{const dt=new Date(k);return dt>=today&&dt<addD(today,n)&&stateOf(k)===st}).length;
+  const hero=()=>{const nf=nextOf('free');return '<section class="hero rv"><div class="eyebrow">Availability</div><h1>'+(nf?'Next free day: '+fmt(new Date(nf),{weekday:'long',day:'numeric',month:'long'}):'Fully booked for now')+'</h1><p class="lead">Bright days are free. Dimmer days with a hollow square are editing days, which can sometimes move; ask. Tap days to build an enquiry.</p>'+
+    '<div class="next">'+(people.length>1?people.map(p=>{const k=nextOf('free',p.id);return '<div class="tile"><small>'+esc(p.name)+' next free</small><b>'+(k?fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'}):'Ask us')+'</b></div>'}).join(''):'')+
+    '<div class="tile"><small>Free, next 30 days</small><b>'+count(30,'free')+'</b><span>'+(count(30,'maybe')?'+ '+count(30,'maybe')+' possible':'')+'</span></div><div class="tile"><small>Free, next 90 days</small><b>'+count(90,'free')+'</b><span>'+(count(90,'maybe')?'+ '+count(90,'maybe')+' possible':'')+'</span></div></div></section>'};
+  const legend=()=>'<div class="legend"><span><i class="sw"></i>Free</span><span><i class="sw m"></i>Possibly</span><span><i class="sw x"></i>Booked</span><span><i class="mk f"></i>Filming</span><span><i class="mk e"></i>Editing, may move</span></div>'+(people.length>1?'<div class="pw">'+people.map(p=>'<span class="who"><i>'+esc(p.name.slice(0,1))+'</i>'+esc(p.name)+'</span>').join('')+'</div>':'');
+  const segs=()=>'<div class="seg">'+[['month','Month'],['week','Week'],['list','List']].map(([k,l])=>'<button data-view="'+k+'" aria-pressed="'+(view===k)+'">'+l+'</button>').join('')+'</div>';
+  const nav=(prevOk,nextOk)=>'<button class="ib" data-nav="-1" '+(prevOk?'':'disabled')+' aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" data-nav="1" '+(nextOk?'':'disabled')+' aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>';
+  const cell=(dt,i)=>{const k=key(dt);const st=stateOf(k);const cls=['d',st,key(dt)===key(today)?'today':'',sel.has(k)?'sel':''].filter(Boolean).join(' ');return '<button class="'+cls+'" data-k="'+k+'" style="animation-delay:'+(i*10)+'ms" '+(selectable(k)?'':'disabled')+'><span class="n">'+dt.getDate()+'</span>'+(st==='off'||st==='past'?'':mks(k))+'</button>'};
+  const month=()=>{const m0=cur;const off=(m0.getDay()+6)%7;const dim=new Date(m0.getFullYear(),m0.getMonth()+1,0).getDate();let cells='';for(let i=0;i<off;i++)cells+='<div class="d out"></div>';for(let n=1;n<=dim;n++)cells+=cell(new Date(m0.getFullYear(),m0.getMonth(),n),n);
+    const prevOk=m0>new Date(today.getFullYear(),today.getMonth(),1),nextOk=new Date(m0.getFullYear(),m0.getMonth()+1,1)<=last;
+    return '<div class="calbar"><b>'+MON[m0.getMonth()]+'<span>'+m0.getFullYear()+'</span></b>'+nav(prevOk,nextOk)+'</div>'+segs()+'<div class="dow">'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="stage '+anim+'" id="stage"><div class="grid">'+cells+'</div></div>'};
+  const week=()=>{const w0=wk,w6=addD(w0,6);let rows='';for(let i=0;i<7;i++){const dt=addD(w0,i);const k=key(dt);const st=stateOf(k);rows+='<button class="wd '+st+(sel.has(k)?' sel':'')+'" data-k="'+k+'" '+(selectable(k)?'':'disabled')+'><span class="dl"><small>'+fmt(dt,{weekday:'short'})+'</small><b>'+dt.getDate()+'</b></span><span class="st"><b>'+(st==='off'?'Weekend':st==='past'?'':words[st])+'</b><span>'+(st==='past'||st==='off'?'':explain(k))+'</span></span>'+(st==='off'||st==='past'?'<span></span>':mks(k))+'</button>'}
+    return '<div class="calbar"><b>'+w0.getDate()+'–'+w6.getDate()+' '+(w0.getMonth()===w6.getMonth()?fmt(w6,{month:'short'}):fmt(w0,{month:'short'})+'–'+fmt(w6,{month:'short'}))+'<span>'+w6.getFullYear()+'</span></b>'+nav(w0>monday(today),addD(w0,7)<=last)+'</div>'+segs()+'<div class="stage '+anim+'" id="stage"><div class="week">'+rows+'</div></div>'};
+  const list=()=>{const ks=keys.filter(k=>['free','maybe'].includes(stateOf(k)));let h='',lastM='';ks.forEach(k=>{const dt=new Date(k);const m=MON[dt.getMonth()]+' '+dt.getFullYear();if(m!==lastM){h+='<div class="lh">'+m+'</div>';lastM=m}const st=stateOf(k);h+='<button class="wd '+st+(sel.has(k)?' sel':'')+'" data-k="'+k+'"><span class="dl"><small>'+fmt(dt,{weekday:'short'})+'</small><b>'+dt.getDate()+'</b></span><span class="st"><b>'+words[st]+'</b><span>'+explain(k)+'</span></span>'+mks(k)+'</button>'});
+    return '<div class="calbar"><b>Free and possible days<span>next '+Math.round(keys.length/7)+' weeks</span></b></div>'+segs()+'<div class="stage '+anim+'" id="stage"><div class="list">'+(h||'<p class="err">Nothing free in this window. Ask anyway; schedules move.</p>')+'</div></div>'};
+  const ask=()=>{const l=[...sel].sort();const body='Hi, we would like to enquire about '+(l.length?l.map(k=>fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})+(stateOf(k)==='maybe'?' (shown as possible)':'')).join(', '):'some dates')+'.\n\nProject: \nWhere: \nWhat we need: \n\nThanks,';
+    return '<section class="ask rv" style="animation-delay:.2s"><h2>'+(l.length?l.length+' day'+(l.length>1?'s':'')+' selected':'Want to book us?')+'</h2><p>'+(l.length?'Send these across and we will confirm within the day.':'Tap the free or possible days you have in mind, or just get in touch.')+'</p>'+(l.length?'<div class="chips">'+l.map(k=>'<span class="chip'+(stateOf(k)==='maybe'?' m':'')+'">'+fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})+'<button data-rm="'+k+'" aria-label="Remove">×</button></span>').join('')+'</div>':'')+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" id="asklink" href="mailto:'+esc(email)+'?subject='+encodeURIComponent('Availability enquiry'+(l.length?': '+l.map(k=>fmt(new Date(k),{day:'numeric',month:'short'})).join(', '):''))+'&body='+encodeURIComponent(body)+'">Enquire'+(l.length?' about these dates':'')+'</a>'+(l.length?'<button class="btn ghost" data-clear>Clear</button>':'')+'</div></section>'};
+  const render=(keepScroll)=>{const y=window.scrollY;app.innerHTML=hero()+'<section class="cal rv" style="animation-delay:.1s">'+(view==='month'?month():view==='week'?week():list())+legend()+'<div class="detail'+(open?' on':'')+'">'+(open?'<b>'+fmt(new Date(open),{weekday:'long',day:'numeric',month:'long'})+' · '+words[stateOf(open)]+'</b><p>'+explain(open)+(stateOf(open)==='maybe'?'<br>Editing days can often be moved for the right project. Add it to your enquiry and we will tell you.':'')+'</p>':'')+'</div></section>'+ask()+'<p class="foot">Updated '+fmt(new Date(data.updated||Date.now()),{day:'numeric',month:'long'})+' · quietmedia.co.uk</p>';
+    const bar=document.getElementById('bar');const l=[...sel];bar.classList.toggle('on',l.length>0);if(l.length){document.getElementById('bartxt').textContent=l.length+' day'+(l.length>1?'s':'')+' selected';document.getElementById('barlink').href=document.getElementById('asklink').href}
+    anim='';if(keepScroll)window.scrollTo(0,y)};
+  app.addEventListener('click',e=>{const nv=e.target.closest('[data-nav]');if(nv&&!nv.disabled){const n=+nv.dataset.nav;if(view==='month')cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);else wk=addD(wk,7*n);anim=n>0?'sl':'sr';render(true);return}
+    const vb=e.target.closest('[data-view]');if(vb){view=vb.dataset.view;if(view==='week')wk=monday(open?new Date(open):cur>today?cur:today);if(view==='month')cur=new Date((open?new Date(open):wk).getFullYear(),(open?new Date(open):wk).getMonth(),1);try{localStorage.setItem('qm-av-view',view)}catch(x){}anim='zi';render(true);return}
+    const d=e.target.closest('[data-k]');if(d&&!d.disabled){const k=d.dataset.k;if(sel.has(k))sel.delete(k);else sel.add(k);open=k;render(true);return}
+    const rm=e.target.closest('[data-rm]');if(rm){sel.delete(rm.dataset.rm);render(true);return}
+    if(e.target.closest('[data-clear]')){sel.clear();open=null;render(true)}});
+  document.getElementById('barclear').onclick=()=>{sel.clear();open=null;render(true)};
   let sx=null;app.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&e.target.closest('#stage'))sx={x:e.clientX,y:e.clientY}});
-  app.addEventListener('pointerup',e=>{if(!sx)return;const dx=e.clientX-sx.x,dy=e.clientY-sx.y;sx=null;if(Math.abs(dx)>60&&Math.abs(dx)>2*Math.abs(dy)){const b=document.querySelector('[data-nav="'+(dx<0?1:-1)+'"]');if(b&&!b.disabled)b.click()}});
+  app.addEventListener('pointerup',e=>{if(!sx)return;const dx=e.clientX-sx.x,dy=e.clientY-sx.y;sx=null;if(view!=='list'&&Math.abs(dx)>60&&Math.abs(dx)>2*Math.abs(dy)){const b=document.querySelector('[data-nav="'+(dx<0?1:-1)+'"]');if(b&&!b.disabled)b.click()}});
   render();
 })();
 </script>
