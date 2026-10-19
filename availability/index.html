@@ -10,67 +10,133 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap">
 <style>
-/* Layout: one quiet page, calendar months in a column, warm neutrals, sharp edges */
-:root{--bg:#0A0A0A;--surface:#111111;--fg:#FFFFFF;--muted:#9A918A;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.18);--tan:#8A7F76;--sand:#DDD5C3;--font:'DM Sans','Helvetica Neue',Arial,sans-serif;color-scheme:dark}
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#EEECEA;--fg:#0A0A0A;--muted:#6E655E;--line:rgba(10,10,10,.09);--line-strong:rgba(10,10,10,.22);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}}
-:root[data-theme="light"]{--bg:#F5F4F2;--surface:#EEECEA;--fg:#0A0A0A;--muted:#6E655E;--line:rgba(10,10,10,.09);--line-strong:rgba(10,10,10,.22);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}
-*{box-sizing:border-box;margin:0;padding:0}
+/* Layout: one calm page. A headline that answers "when are you next free", then months you swipe through, then a way to ask. Soft surfaces, sharp page, warm neutrals; the only colour is the state of a day. */
+:root{--bg:#0A0A0A;--surface:#141413;--raise:#1D1C1A;--raise2:#262522;--fg:#FFFFFF;--muted:#9A918A;--faint:#5E5852;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.18);--tan:#8A7F76;--sand:#DDD5C3;
+  --free:#A7B3A0;--limited:#DDD5C3;--busy:#5E5852;--film:#F0617A;--edit:#5E93F0;
+  --font:'DM Sans','Helvetica Neue',Arial,sans-serif;--ease:cubic-bezier(.16,1,.3,1);--r:14px;--rxl:22px;color-scheme:dark}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;--free:#5F6E58;--limited:#8A7F76;--busy:#C9C3BA;color-scheme:light}}
+:root[data-theme="light"]{--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;--free:#5F6E58;--limited:#8A7F76;--busy:#C9C3BA;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg)}
-body{font-family:var(--font);font-weight:300;color:var(--fg);font-size:15px;line-height:1.6;padding-inline:16px;-webkit-font-smoothing:antialiased}
-body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.035'/%3E%3C/svg%3E");background-size:200px}
-.wrap{max-width:760px;margin:0 auto;padding-block:32px 64px}
-.brand{display:flex;align-items:center;gap:10px;margin-bottom:40px}
-.brand svg{width:28px;height:28px}.brand b{font-weight:300;font-size:19px;letter-spacing:-.2px}
-h1{font-size:clamp(32px,5vw,48px);font-weight:300;letter-spacing:-.8px;line-height:1.05;margin-bottom:12px;text-wrap:balance}
-.lead{color:var(--muted);max-width:52ch;margin-bottom:28px}
-.key{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:28px}
-.key span{display:inline-flex;align-items:center;gap:7px}.key i{width:12px;height:12px;display:inline-block;border:1px solid var(--line-strong)}
-.key i.free{background:var(--fg)}.key i.limited{background:var(--tan)}.key i.busy{background:transparent}
-.month{margin-bottom:28px}
-.month h2{font-size:18px;font-weight:300;letter-spacing:-.1px;margin-bottom:10px}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.wd{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--tan);text-align:center;padding-bottom:4px}
-.d{aspect-ratio:1;max-width:100%;display:grid;place-items:center;font-variant-numeric:tabular-nums;font-size:14px;border:1px solid var(--line);color:var(--muted)}
-.d.free{background:var(--fg);color:var(--bg);border-color:var(--fg);font-weight:400}
-.d.limited{background:var(--tan);color:var(--bg);border-color:var(--tan)}
-.d.busy{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
-.d.off,.d.past{opacity:.3}.d.pad{border:0}
-.cta{border-top:1px solid var(--line);padding-top:24px;margin-top:8px}
-.cta p{color:var(--muted);margin-bottom:14px;max-width:52ch}
-.btn{display:inline-flex;align-items:center;padding:13px 24px;background:var(--fg);color:var(--bg);text-decoration:none;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
-.email{font-size:14px;margin-top:12px;color:var(--muted)}.email b{font-weight:400;color:var(--fg);user-select:all}
-.note{font-size:12px;color:var(--muted);margin-top:28px}
+body{font-family:var(--font);font-weight:300;color:var(--fg);font-size:15px;line-height:1.5;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));-webkit-font-smoothing:antialiased;overscroll-behavior-x:none}
+body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");background-size:200px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.wrap{max-width:720px;margin:0 auto;padding-block:22px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:34px}
+.brand{display:flex;align-items:center;gap:10px}.brand svg{width:26px;height:26px}.brand b{font-weight:300;font-size:19px;letter-spacing:-.2px}
+.ib{width:38px;height:38px;border-radius:50%;background:var(--raise);display:grid;place-items:center;transition:transform .15s var(--ease),background .2s}
+.ib:active{transform:scale(.92)}.ib svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.rv{opacity:0;transform:translateY(14px);animation:rv .7s var(--ease) forwards}
+@keyframes rv{to{opacity:1;transform:none}}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--tan)}
+h1{font-size:clamp(34px,7vw,52px);font-weight:300;letter-spacing:-1px;line-height:1.02;text-wrap:balance;margin:8px 0 10px}
+.lead{color:var(--muted);max-width:52ch;font-size:16px}
+.hero{padding:26px 24px;border-radius:var(--rxl);background:var(--surface);margin-bottom:14px}
+.next{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;margin-top:22px}
+.tile{border-radius:var(--r);padding:14px 16px;background:var(--raise)}
+.tile small{display:block;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tan);margin-bottom:4px}
+.tile b{font-size:22px;font-weight:300;letter-spacing:-.4px;line-height:1.1;display:block}
+.tile span{color:var(--muted);font-size:13px}
+.cal{border-radius:var(--rxl);background:var(--surface);padding:18px 18px 16px;overflow:hidden}
+.calbar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.calbar b{font-size:22px;font-weight:300;letter-spacing:-.4px;flex:1;min-width:0}
+.calbar b span{color:var(--muted);font-size:15px;margin-left:8px}
+.dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:center;margin-bottom:6px}
+.stage{touch-action:pan-y}
+.stage.sl{animation:sl .36s var(--ease)}.stage.sr{animation:sr .36s var(--ease)}
+@keyframes sl{from{transform:translateX(26px);opacity:0}}@keyframes sr{from{transform:translateX(-26px);opacity:0}}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.d{aspect-ratio:1/1.08;border-radius:12px;background:var(--raise);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative;min-width:0;transition:transform .18s var(--ease),background .2s,box-shadow .2s;animation:pop .5s var(--ease) both}
+@keyframes pop{from{opacity:0;transform:scale(.86)}}
+.d.out{visibility:hidden}
+.d .n{font-size:14px;font-variant-numeric:tabular-nums}
+.d.past{opacity:.35}.d.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.d.off .n{color:var(--faint)}
+.d.free{background:color-mix(in srgb,var(--free) 22%,var(--raise))}
+.d.limited{background:color-mix(in srgb,var(--limited) 22%,var(--raise))}
+.d.busy{background:var(--raise);opacity:.75}
+.d.today .n{font-weight:500;text-decoration:underline;text-underline-offset:4px}
+.d.sel{box-shadow:0 0 0 2px var(--fg);transform:scale(1.04);z-index:1}
+.d:not(.off):not(.past):hover{transform:translateY(-2px)}
+.d:not(.off):not(.past):active{transform:scale(.94)}
+.pips{display:flex;gap:4px;height:7px}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--free)}
+.pip.filming{background:var(--film)}.pip.edit{background:var(--edit)}.pip.busy{background:var(--busy)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:14px 2px 0;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.people{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.who{display:inline-flex;align-items:center;gap:7px;padding:5px 10px 5px 6px;border-radius:999px;background:var(--raise);font-size:13px}
+.who i{width:22px;height:22px;border-radius:50%;background:var(--fg);color:var(--bg);display:inline-grid;place-items:center;font-size:10px;font-weight:500;font-style:normal}
+.detail{margin-top:14px;border-radius:var(--r);background:var(--raise);padding:14px 16px;display:none;animation:rv .4s var(--ease)}
+.detail.on{display:block}
+.detail b{font-weight:400}
+.detail .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--fg);color:var(--bg);text-decoration:none;font-size:14px;font-weight:500;min-height:44px;transition:transform .12s}
+.btn:active{transform:scale(.97)}.btn.ghost{background:var(--raise2);color:var(--fg)}
+.ask{margin-top:14px;padding:22px 24px;border-radius:var(--rxl);background:var(--surface)}
+.ask h2{font-size:22px;font-weight:300;letter-spacing:-.3px;margin-bottom:6px}
+.ask p{color:var(--muted);margin-bottom:14px;max-width:52ch}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--raise);font-size:13px}
+.chip button{color:var(--muted);font-size:16px;line-height:1}
+.foot{font-size:12px;color:var(--muted);margin-top:24px;text-align:center}
+.err{padding:40px 0;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.rv,.d,.stage,.detail{animation:none!important;opacity:1}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="brand"><svg viewBox="0 0 400 400" aria-hidden="true"><path d="M 296.555 343.549 A 173 173 0 1 1 343.549 296.555 L 302.822 255.828 A 117 117 0 1 0 255.828 302.822 L 296.555 343.549 Z" fill="currentColor"/></svg><b>quiet media</b></div>
-  <h1>When we're free</h1>
-  <p class="lead">Days we can take on filming or production work over the coming weeks. If a date you need isn't shown as free, ask anyway. Schedules move.</p>
-  <div class="key"><span><i class="free"></i> Available</span><span><i class="limited"></i> Part of the team available</span><span><i class="busy"></i> Booked</span></div>
-  <div id="months"><p class="note">Loading…</p></div>
-  <div class="cta"><p>Tell us the dates, where, and what you have in mind, and we'll come back to you within a working day.</p><a class="btn" id="mail" href="#">Enquire</a><p class="email" id="emailline" hidden>Or email <b id="email"></b></p></div>
-  <p class="note" id="updated"></p>
+  <div class="top rv"><div class="brand"><svg viewBox="0 0 400 400" aria-hidden="true"><path d="M 296.555 343.549 A 173 173 0 1 1 343.549 296.555 L 302.822 255.828 A 117 117 0 1 0 255.828 302.822 L 296.555 343.549 Z" fill="currentColor"/></svg><b>quiet media</b></div>
+    <button class="ib" id="theme" aria-label="Switch light or dark"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg></button></div>
+  <div id="app"><p class="err">Loading…</p></div>
 </div>
 <script>
-const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok)throw new Error('rpc '+r.status);return r.json()};
-(async function(){
-  const el=document.getElementById('months');
-  let data;try{data=await rpc('get_availability',{p_slug:'quiet-media'});if(!data)throw 0}catch(e){el.innerHTML='<p class="note">Availability isn\'t published yet. Email us and we\'ll let you know.</p>';return}
-  const days=data.days||{};const keys=Object.keys(days).sort();if(!keys.length){el.innerHTML='<p class="note">No dates published yet.</p>';return}
-  const pad=n=>String(n).padStart(2,'0');const today=new Date();today.setHours(0,0,0,0);
-  const first=new Date(keys[0]+'T00:00:00'),last=new Date(keys[keys.length-1]+'T00:00:00');
-  let h='';for(let m=new Date(first.getFullYear(),first.getMonth(),1);m<=last;m=new Date(m.getFullYear(),m.getMonth()+1,1)){
-    h+='<section class="month"><h2>'+m.toLocaleDateString('en-GB',{month:'long',year:'numeric'})+'</h2><div class="grid">'+['M','T','W','T','F','S','S'].map(w=>'<div class="wd">'+w+'</div>').join('');
-    const lead=(m.getDay()+6)%7;for(let i=0;i<lead;i++)h+='<div class="d pad"></div>';
-    const n=new Date(m.getFullYear(),m.getMonth()+1,0).getDate();
-    for(let d=1;d<=n;d++){const dt=new Date(m.getFullYear(),m.getMonth(),d);const k=dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(d);const st=days[k];
-      const cls=dt<today?'past':st||'pad';const lab=st==='free'?'Available':st==='limited'?'Part of the team available':st==='busy'?'Booked':'';
-      h+='<div class="d '+cls+'" '+(lab?'title="'+lab+'" aria-label="'+k+' '+lab+'"':'')+'>'+(st||dt<today?d:'')+'</div>'}
-    h+='</div></section>'}
-  el.innerHTML=h;
-  if(data.email){const a=document.getElementById('mail');a.href='mailto:'+data.email+'?subject='+encodeURIComponent('Availability enquiry');document.getElementById('email').textContent=data.email;document.getElementById('emailline').hidden=false}
-  if(data.updated)document.getElementById('updated').textContent='Updated '+new Date(data.updated).toLocaleDateString('en-GB',{day:'numeric',month:'long'})+'. Shows planned availability only; nothing here is a confirmed booking.';
+const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';
+const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok)throw new Error('rpc '+r.status);return r.json()};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const fmt=(d,o)=>d.toLocaleDateString('en-GB',o);const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+/* theme */
+const root=document.documentElement;try{const t=localStorage.getItem('qm-av-theme');if(t)root.dataset.theme=t}catch(e){}
+document.getElementById('theme').onclick=()=>{const dark=root.dataset.theme?root.dataset.theme==='dark':!matchMedia('(prefers-color-scheme: light)').matches;root.dataset.theme=dark?'light':'dark';try{localStorage.setItem('qm-av-theme',root.dataset.theme)}catch(e){}};
+(async()=>{
+  const app=document.getElementById('app');let data;
+  try{data=await rpc('get_availability',{p_slug:'quiet-media'});if(!data)throw 0}catch(e){app.innerHTML='<p class="err">Availability is not published right now. Email hello@quietmedia.co.uk and we will come back to you.</p>';return}
+  // Normalise old and new shapes: day → {s, by:{id:kind}}
+  const people=data.people||[{id:'qm',name:'Quiet Media'}];
+  const days={};for(const [k,v] of Object.entries(data.days||{})){days[k]=typeof v==='string'?(v==='off'?'off':{s:v,by:{}}):v}
+  const today=new Date();today.setHours(0,0,0,0);const keys=Object.keys(days).sort();const first=keys[0]?new Date(keys[0]):today;const last=keys.length?new Date(keys[keys.length-1]):today;
+  const sel=new Set();let cur=new Date(today.getFullYear(),today.getMonth(),1);let anim='';let open=null;
+  const label=k=>k==='filming'?'Filming':k==='edit'?'Editing':k==='busy'?'Booked':'Free';
+  const nextFree=(pid)=>keys.find(k=>{const d=days[k];if(d==='off'||new Date(k)<today)return false;return pid?d.by[pid]==='free':d.s==='free'});
+  const freeIn=(n)=>keys.filter(k=>{const d=days[k];const dt=new Date(k);return d!=='off'&&dt>=today&&dt<new Date(today.getTime()+n*864e5)&&d.s!=='busy'}).length;
+  const hero=()=>{const nf=nextFree();const tiles=people.map(p=>{const k=nextFree(p.id);return '<div class="tile"><small>'+esc(p.name)+' next free</small><b>'+(k?fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'}):'Ask us')+'</b></div>'}).join('');
+    return '<section class="hero rv" style="animation-delay:.05s"><div class="eyebrow">Availability</div><h1>'+(nf?'Next free day: '+fmt(new Date(nf),{weekday:'long',day:'numeric',month:'long'}):'Fully booked for now')+'</h1><p class="lead">'+(people.length>1?'Who is free, day by day, for the next '+Math.round(keys.length/7)+' weeks. ':'Free days for filming and production work over the next '+Math.round(keys.length/7)+' weeks. ')+'Tap days to build an enquiry.</p>'+
+    '<div class="next">'+tiles+'<div class="tile"><small>Free days, next 30</small><b>'+freeIn(30)+'</b><span>of '+keys.filter(k=>days[k]!=='off'&&new Date(k)>=today&&new Date(k)<new Date(today.getTime()+30*864e5)).length+' working days</span></div></div></section>'};
+  const month=()=>{const m0=cur;const off=(m0.getDay()+6)%7;const dim=new Date(m0.getFullYear(),m0.getMonth()+1,0).getDate();let cells='';for(let i=0;i<off;i++)cells+='<div class="d out"></div>';
+    for(let n=1;n<=dim;n++){const dt=new Date(m0.getFullYear(),m0.getMonth(),n);const k=key(dt);const d=days[k];const past=dt<today;const known=d!=null&&d!=='off';
+      const cls=['d',past?'past':'',d==='off'?'off':'',known?d.s:(d==null?'off':''),key(dt)===key(today)?'today':'',sel.has(k)?'sel':''].filter(Boolean).join(' ');
+      const pips=known?'<span class="pips">'+people.map(p=>'<i class="pip '+esc(d.by[p.id]||'free')+'" title="'+esc(p.name)+': '+label(d.by[p.id]||'free')+'"></i>').join('')+'</span>':'<span class="pips"></span>';
+      cells+='<button class="'+cls+'" data-k="'+k+'" style="animation-delay:'+(n*12)+'ms" '+(known&&!past?'':'disabled')+'><span class="n">'+n+'</span>'+pips+'</button>'}
+    const prevOk=new Date(m0.getFullYear(),m0.getMonth(),0)>=new Date(first.getFullYear(),first.getMonth(),1),nextOk=new Date(m0.getFullYear(),m0.getMonth()+1,1)<=last;
+    return '<section class="cal rv" style="animation-delay:.15s"><div class="calbar"><b>'+MON[m0.getMonth()]+'<span>'+m0.getFullYear()+'</span></b><button class="ib" data-nav="-1" '+(prevOk?'':'disabled style="opacity:.3"')+' aria-label="Previous month"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" data-nav="1" '+(nextOk?'':'disabled style="opacity:.3"')+' aria-label="Next month"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>'+
+    '<div class="dow">'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="stage '+anim+'" id="stage"><div class="grid">'+cells+'</div></div>'+
+    '<div class="legend"><span><i style="background:var(--free)"></i>Free</span><span><i style="background:var(--film)"></i>Filming</span><span><i style="background:var(--edit)"></i>Editing</span><span><i style="background:var(--busy)"></i>Booked</span>'+(people.length>1?'<span style="margin-left:auto">One dot per person</span>':'')+'</div>'+
+    (people.length>1?'<div class="people">'+people.map(p=>'<span class="who"><i>'+esc(p.name.slice(0,1))+'</i>'+esc(p.name)+'</span>').join('')+'</div>':'')+
+    '<div class="detail'+(open?' on':'')+'" id="detail">'+(open?detail(open):'')+'</div></section>'};
+  const detail=k=>{const d=days[k];const dt=new Date(k);return '<b>'+fmt(dt,{weekday:'long',day:'numeric',month:'long'})+'</b><div class="row">'+people.map(p=>'<span class="who"><i>'+esc(p.name.slice(0,1))+'</i>'+esc(p.name)+' · '+label(d.by[p.id]||'free')+'</span>').join('')+'</div>'};
+  const ask=()=>{const list=[...sel].sort();const email=data.email||'hello@quietmedia.co.uk';const body='Hi, we would like to enquire about '+(list.length?list.map(k=>fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})).join(', '):'some dates')+'.\n\nProject: \nWhere: \nWhat we need: \n\nThanks,';
+    return '<section class="ask rv" style="animation-delay:.25s"><h2>'+(list.length?list.length+' day'+(list.length>1?'s':'')+' selected':'Want to book us?')+'</h2><p>'+(list.length?'Send these across and we will confirm within the day.':'Tap the days you have in mind, or just get in touch.')+'</p>'+(list.length?'<div class="chips">'+list.map(k=>'<span class="chip">'+fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})+'<button data-rm="'+k+'" aria-label="Remove">×</button></span>').join('')+'</div>':'')+
+    '<div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="mailto:'+esc(email)+'?subject='+encodeURIComponent('Availability enquiry'+(list.length?': '+list.map(k=>fmt(new Date(k),{day:'numeric',month:'short'})).join(', '):''))+'&body='+encodeURIComponent(body)+'">Enquire'+(list.length?' about these dates':'')+'</a>'+(list.length?'<button class="btn ghost" data-clear>Clear</button>':'')+'</div></section>'};
+  const render=()=>{app.innerHTML=hero()+month()+ask()+'<p class="foot">Updated '+fmt(new Date(data.updated||Date.now()),{day:'numeric',month:'long'})+' · quietmedia.co.uk</p>';anim=''};
+  app.addEventListener('click',e=>{const nav=e.target.closest('[data-nav]');if(nav&&!nav.disabled){const n=+nav.dataset.nav;cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);anim=n>0?'sl':'sr';render();return}
+    const d=e.target.closest('.d[data-k]');if(d&&!d.disabled){const k=d.dataset.k;if(open===k){if(sel.has(k))sel.delete(k);else sel.add(k)}open=k;render();return}
+    const rm=e.target.closest('[data-rm]');if(rm){sel.delete(rm.dataset.rm);render();return}
+    if(e.target.closest('[data-clear]')){sel.clear();render()}});
+  /* swipe between months */
+  let sx=null;app.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&e.target.closest('#stage'))sx={x:e.clientX,y:e.clientY}});
+  app.addEventListener('pointerup',e=>{if(!sx)return;const dx=e.clientX-sx.x,dy=e.clientY-sx.y;sx=null;if(Math.abs(dx)>60&&Math.abs(dx)>2*Math.abs(dy)){const b=document.querySelector('[data-nav="'+(dx<0?1:-1)+'"]');if(b&&!b.disabled)b.click()}});
+  render();
 })();
 </script>
 </body>
