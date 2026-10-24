@@ -66,7 +66,11 @@ ul.crew{list-style:none;display:grid;gap:6px}ul.crew li{display:flex;justify-con
   const dayEl=d=>{const dt=new Date(d.date);return '<div class="day"><div class="d"><b>'+dt.getDate()+'</b><small>'+dt.toLocaleDateString('en-GB',{weekday:'short',month:'short'})+'</small></div><div class="t"><b>'+(data.kind==='crew'&&d.call?'Call '+esc(d.call):esc(d.start)+' – '+esc(d.end))+'</b><span>'+(data.kind==='crew'&&d.call?'Working '+esc(d.start)+' – '+esc(d.end)+'. ':'')+esc(d.type==='Shoot'?'Filming':d.type)+(d.location?' · '+esc(d.location):'')+'</span></div></div>'};
   const contact='<p class="contact">'+(data.replyPhone?'Call or text <b>'+esc(data.replyPhone)+'</b>. ':'')+(data.replyEmail?'Email <b>'+esc(data.replyEmail)+'</b>.':'')+'</p>';
   const dates=data.days.map(d=>new Date(d.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})).join(', ');
-  if(data.kind==='crew'&&data.v>=2){document.querySelector('.brand').remove();app.innerHTML=QMSheet.render({...data,ref:id});QMSheet.mount(app,{...data,ref:id});}
+  if(data.kind==='crew'&&data.v>=2){document.querySelector('.brand').remove();
+    /* a personal link (?p=crewId) records "seen" and lets them confirm the timings */
+    const who=new URLSearchParams(location.search).get('p');let ack=null;
+    if(who&&/^[A-Za-z0-9_-]{1,40}$/.test(who)){try{const st=await rpc('ack_call_sheet',{p_id:id,p_token:key,p_person:who,p_what:'seen'});ack={person:who,confirmed:+st.confirmed||0,at:st.confirmed_at,name:((data.crew||[]).find(c=>c.id===who)||{}).name||''}}catch(e){ack=null}}
+    const draw=()=>{const d={...data,ref:id,ack};if(ack)d.onAck=async()=>{try{const st=await rpc('ack_call_sheet',{p_id:id,p_token:key,p_person:who,p_what:'confirmed',p_version:data.version||1});ack={...ack,confirmed:+st.confirmed||data.version||1,at:st.confirmed_at||new Date().toISOString()};draw();window.scrollTo({top:0,behavior:'smooth'})}catch(e){alert('Could not confirm just now. Please try again, or message '+(data.from||'us')+'.');draw()}};app.innerHTML=QMSheet.render(d);QMSheet.mount(app,d)};draw();}
   else if(data.kind==='crew'){
     const body=encodeURIComponent('Confirmed for '+data.title+' on '+dates+'. – ');
     app.innerHTML='<div class="eyebrow">Call sheet</div><h1>'+esc(data.title)+'</h1><p class="lead">'+esc(data.client?data.client+' · ':'')+esc(data.type==='Shoot'?'Filming':data.type)+(data.days.length>1?' · '+data.days.length+' days':'')+'</p>'+
