@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{padding-top:env(safe-area-inset-top,0px)}</style>
+<title>Quiet Media</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap">
+<style>
+/* Layout: a single sheet, read top to bottom on a phone on the way to set. Warm neutrals, soft surfaces, one accent for the action. */
+:root{--bg:#0A0A0A;--surface:#111111;--raise:#181715;--fg:#FFFFFF;--muted:#9A918A;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.2);--tan:#8A7F76;--sand:#DDD5C3;--warn:#C9894E;--ok:#A7B3A0;--font:'DM Sans','Helvetica Neue',Arial,sans-serif;color-scheme:dark}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#EEECEA;--raise:#E6E3DF;--fg:#0A0A0A;--muted:#6E655E;--line:rgba(10,10,10,.09);--line-strong:rgba(10,10,10,.25);--tan:#7A6F66;--sand:#8A7F76;--warn:#A8662C;--ok:#5F6E58;color-scheme:light}}
+:root[data-theme="light"]{--bg:#F5F4F2;--surface:#EEECEA;--raise:#E6E3DF;--fg:#0A0A0A;--muted:#6E655E;--line:rgba(10,10,10,.09);--line-strong:rgba(10,10,10,.25);--tan:#7A6F66;--sand:#8A7F76;--warn:#A8662C;--ok:#5F6E58;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:var(--font);font-weight:300;color:var(--fg);font-size:16px;line-height:1.6;padding-inline:16px;-webkit-font-smoothing:antialiased}
+body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.035'/%3E%3C/svg%3E");background-size:200px}
+.wrap{max-width:680px;margin:0 auto;padding-block:32px 72px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:36px}.brand svg{width:28px;height:28px}.brand b{font-weight:300;font-size:19px;letter-spacing:-.2px}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--tan);margin-bottom:10px}
+h1{font-size:clamp(32px,6vw,48px);font-weight:300;letter-spacing:-.8px;line-height:1.05;margin-bottom:8px;text-wrap:balance}
+h2{font-size:20px;font-weight:300;letter-spacing:-.1px;margin-bottom:12px}
+.lead{color:var(--muted);margin-bottom:28px;max-width:52ch}
+.panel{background:var(--surface);border-radius:20px;padding:20px;margin-bottom:12px}
+.day{display:grid;grid-template-columns:72px 1fr;gap:16px;padding:14px 0;border-top:1px solid var(--line)}
+.day:first-of-type{border-top:0;padding-top:0}
+.day .d b{display:block;font-size:30px;font-weight:300;letter-spacing:-.5px;line-height:1}.day .d small{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tan)}
+.day .t{display:grid;gap:4px}.day .t b{font-weight:500;font-size:22px;letter-spacing:-.2px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:15px}.kv dt{color:var(--muted)}.kv dd{min-width:0}
+.big{font-size:34px;font-weight:300;letter-spacing:-.6px;font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 22px;border-radius:999px;background:var(--fg);color:var(--bg);text-decoration:none;font-size:14px;font-weight:500;border:0;cursor:pointer;min-height:48px}
+.btn.ghost{background:var(--raise);color:var(--fg)}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.pill{display:inline-block;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line-strong);color:var(--muted);vertical-align:middle}
+.pill.pencil{color:var(--warn);border-color:var(--warn);border-style:dashed}.pill.confirmed{color:var(--ok);border-color:var(--ok)}
+.terms{white-space:pre-line;font-size:14px;color:var(--muted);line-height:1.7}
+.note{font-size:12px;color:var(--muted);margin-top:24px}
+.contact b{font-weight:400;user-select:all}
+ul.crew{list-style:none;display:grid;gap:6px}ul.crew li{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:6px}ul.crew li span{color:var(--muted)}
+.err{padding:40px 0;color:var(--muted)}
+
+.day .t span{color:var(--muted);font-size:14px}.day .fee{justify-self:end;font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+.day.w{grid-template-columns:72px 1fr auto}
+.tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line-strong);padding-top:14px;margin-top:6px}
+label.f{display:grid;gap:6px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--tan);margin-top:14px}
+input[type=text],textarea{font:inherit;font-size:16px;color:var(--fg);background:var(--raise);border:0;border-radius:14px;padding:13px 14px;width:100%;text-transform:none;letter-spacing:0}
+textarea{min-height:84px;resize:vertical}
+.sig{position:relative;background:var(--raise);border-radius:14px;height:150px;touch-action:none;overflow:hidden}
+.sig canvas{position:absolute;inset:0;width:100%;height:100%}
+.sig .hint{position:absolute;left:14px;bottom:12px;font-size:12px;color:var(--muted);pointer-events:none}
+.sig .base{position:absolute;left:14px;right:14px;bottom:36px;border-top:1px dashed var(--line-strong)}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:14px;line-height:1.5}
+.check input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--fg)}
+.btn[disabled]{opacity:.4;cursor:default}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font:inherit;font-size:14px;cursor:pointer;padding:6px 0}
+.done{display:flex;gap:14px;align-items:center}.done i{width:44px;height:44px;border-radius:50%;background:var(--ok);flex:none;display:grid;place-items:center}.done i svg{width:22px;height:22px;stroke:var(--bg);fill:none;stroke-width:2.4}
+.signed img{max-width:260px;height:auto;display:block;margin-top:6px;filter:var(--sigf,none)}
+.err2{color:var(--warn);font-size:14px;margin-top:10px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sigf:invert(1)}}
+@media print{body::after,.acts,.noprint{display:none!important}:root{--bg:#fff;--surface:#fff;--raise:#f3f3f3;--fg:#000;--muted:#555;--tan:#555;--sigf:none}.panel{border:1px solid #ddd}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><svg viewBox="0 0 400 400" aria-hidden="true"><path d="M 296.555 343.549 A 173 173 0 1 1 343.549 296.555 L 302.822 255.828 A 117 117 0 1 0 255.828 302.822 L 296.555 343.549 Z" fill="currentColor"/></svg><b>quiet media</b></div>
+  <div id="app"><p class="err">Loading…</p></div>
+</div>
+<script>
+(async function(){
+  const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';
+  const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok){let m='';try{m=(await r.json()).message||''}catch(e){}throw new Error(m||('Error '+r.status))}return r.json()};
+  const app=document.getElementById('app');
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const gbp=n=>'£'+(Number(n)||0).toLocaleString('en-GB',{maximumFractionDigits:2,minimumFractionDigits:Number(n)%1?2:0});
+  const fail=m=>{app.innerHTML='<p class="err">'+m+'</p>'};
+  const h=location.hash.slice(1);const dot=h.indexOf('.');if(dot<0)return fail('This link is incomplete. Ask for it to be sent again.');
+  const id=h.slice(0,dot),key=h.slice(dot+1);if(!/^[A-Za-z0-9_-]+$/.test(id))return fail('This link is not valid.');
+  let res;try{res=await rpc('get_crew_form',{p_id:id,p_token:key})}catch(e){return fail('This page could not be loaded. Check your connection and try again.')}
+  if(!res||!res.payload)return fail('This link is no longer valid. Ask for it to be sent again.');
+  const d=res.payload;let last=res.response;const book=d.kind==='crewbook';
+  document.title=(book?'Booking · ':'Pencil · ')+d.title+' — Quiet Media';
+  const fmt=(t,o)=>new Date(t).toLocaleDateString('en-GB',o);
+  const dates=d.days.map(x=>fmt(x.date,{day:'numeric',month:'short'})).join(', ');
+  const dayEl=x=>{const dt=new Date(x.date);return '<div class="day w"><div class="d"><b>'+dt.getDate()+'</b><small>'+dt.toLocaleDateString('en-GB',{weekday:'short',month:'short'})+'</small></div><div class="t"><b>'+(x.call?'Call '+esc(x.call):esc(x.start)+' – '+esc(x.end))+'</b><span>'+(x.call?'Working '+esc(x.start)+' – '+esc(x.end)+' · ':'')+esc(x.type==='Shoot'?'Filming':x.type==='Edit'?'Editing':x.type)+(x.location?' · '+esc(x.location):'')+'</span></div><div class="fee">'+gbp(x.rate)+'</div></div>'};
+  const contact=()=>'<p class="contact" style="margin-top:12px;font-size:14px;color:var(--muted)">'+(d.replyPhone?'Call or text <b>'+esc(d.replyPhone)+'</b>. ':'')+(d.replyEmail?'Email <b>'+esc(d.replyEmail)+'</b>.':'')+'</p>';
+  const head=(eyebrow,lead)=>'<div class="eyebrow">'+eyebrow+'</div><h1>'+esc(d.title)+'</h1><p class="lead">'+lead+'</p>';
+  const daysPanel=()=>'<div class="panel">'+d.days.map(dayEl).join('')+'<div class="tot"><span style="color:var(--muted)">'+(d.days.length>1?d.days.length+' days':'Fee')+(d.role?' · '+esc(d.role):'')+'</span><span class="big">'+gbp(d.total)+'</span></div></div>';
+  const tick='<i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>';
+  async function send(data,btn){btn.disabled=true;const t=btn.textContent;btn.textContent='Sending…';const er=app.querySelector('.err2');if(er)er.remove();
+    try{await rpc('respond_crew_form',{p_id:id,p_token:key,p_data:data});last={data,at:new Date().toISOString()};render()}
+    catch(e){btn.disabled=false;btn.textContent=t;btn.insertAdjacentHTML('afterend','<p class="err2">Could not send: '+esc(e.message)+'. Try again, or message '+esc(d.from)+'.</p>')}}
+
+  function renderPencil(){
+    const r=last&&last.data;
+    if(d.released){app.innerHTML=head('Pencil released','You are released from these dates. Thank you for holding them for us.')+daysPanel()+contact();return}
+    if(r&&!r.changing){app.innerHTML=head(r.hold?'Holding':'Not available',r.hold?'Thanks, '+esc(d.name.split(' ')[0])+'. You are holding these dates for us. We will book you with a form to sign, or release you, as soon as we know.':'Thanks for letting us know. We will look elsewhere for these dates.')+
+      '<div class="panel"><div class="done">'+tick+'<div><b style="font-weight:400">'+(r.hold?'Dates held':'Not available')+'</b><div style="color:var(--muted);font-size:14px">Sent '+fmt(last.at,{day:'numeric',month:'long'})+(r.note?' · “'+esc(r.note)+'”':'')+'</div></div></div><div class="acts"><button class="btn ghost" id="chg">Change my answer</button></div></div>'+daysPanel()+contact();
+      document.getElementById('chg').onclick=()=>{last={...last,data:{...r,changing:true}};render()};return}
+    app.innerHTML=head('Pencil','Could you hold these dates for '+esc(d.company||'Quiet Media')+'? A pencil is not a booking yet: the job may or may not go ahead. If it does, we will send you a booking form to confirm. If not, we will release you.')+daysPanel()+
+      '<div class="panel"><h2>Can you hold them?</h2><label class="f">Anything to add (optional)<textarea id="note" placeholder="e.g. Can do the 12th but not the 13th">'+esc(r&&r.note||'')+'</textarea></label><div class="acts"><button class="btn" id="yes">Yes, I’ll hold them</button><button class="btn ghost" id="no">I can’t</button></div>'+contact()+'</div>'+
+      '<p class="note">For '+esc(d.name)+'. Ref '+esc(d.ref)+'.</p>';
+    const note=()=>document.getElementById('note').value.trim();
+    document.getElementById('yes').onclick=e=>send({type:'pencil',hold:true,note:note()},e.currentTarget);
+    document.getElementById('no').onclick=e=>send({type:'pencil',hold:false,note:note()},e.currentTarget);
+  }
+
+  function renderBook(){
+    const r=last&&last.data;
+    if(r&&r.accept){app.innerHTML=head('Booking confirmed','You are booked. This page is your copy of the agreement.')+
+      '<div class="panel"><div class="done">'+tick+'<div><b style="font-weight:400">Signed by '+esc(r.name)+'</b><div style="color:var(--muted);font-size:14px">'+fmt(last.at,{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'</div></div></div>'+(r.sig?'<div class="signed"><img alt="Signature" src="'+esc(r.sig)+'"></div>':'')+'<div class="acts noprint"><button class="btn ghost" onclick="print()">Save or print a copy</button></div></div>'+
+      daysPanel()+agreement()+'<p class="note">Between '+esc(d.company)+' and '+esc(d.name)+'. Ref '+esc(d.ref)+'. A call sheet with the full plan follows before the day.</p>';return}
+    if(r&&!r.accept&&!r.changing){app.innerHTML=head('Booking declined','Thanks for letting us know.')+'<div class="panel"><p>'+(r.note?'“'+esc(r.note)+'”':'You turned this booking down.')+'</p><div class="acts"><button class="btn ghost" id="chg">I can do it after all</button></div>'+contact()+'</div>'+daysPanel();document.getElementById('chg').onclick=()=>{last={...last,data:{...r,changing:true}};render()};return}
+    app.innerHTML=head('Booking form','You are being booked by '+esc(d.company)+' for the dates below at the fee shown. Read the terms, then sign to confirm.')+daysPanel()+agreement()+
+      '<div class="panel"><h2>Sign to confirm</h2><label class="f">Your full name<input type="text" id="nm" autocomplete="name" value="'+esc(d.name)+'"></label><label class="f">Signature</label><div class="sig" id="sig"><div class="base"></div><span class="hint">Sign with your finger or mouse</span><canvas></canvas></div><div style="display:flex;justify-content:flex-end"><button class="link" id="clr" type="button">Clear</button></div>'+
+      '<label class="check"><input type="checkbox" id="ok"><span>I agree to work on these dates for the fee shown, under the terms above.</span></label><div class="acts"><button class="btn" id="go" disabled>Confirm booking</button></div><div style="margin-top:6px"><button class="link" id="dec" type="button">I can’t do this booking</button></div>'+contact()+'</div>'+
+      '<p class="note">Ref '+esc(d.ref)+'. Sent '+fmt(d.sent,{day:'numeric',month:'long'})+'.</p>';
+    const cv=app.querySelector('#sig canvas'),box=document.getElementById('sig');let drawn=false,pts=0;
+    const size=()=>{const r=box.getBoundingClientRect(),k=devicePixelRatio||1;cv.width=r.width*k;cv.height=r.height*k;const c=cv.getContext('2d');c.scale(k,k);c.lineWidth=2.2;c.lineCap='round';c.lineJoin='round';c.strokeStyle=getComputedStyle(document.body).color};size();
+    const ctx=cv.getContext('2d');let down=false,lx=0,ly=0;const pos=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+    cv.addEventListener('pointerdown',e=>{down=true;cv.setPointerCapture(e.pointerId);[lx,ly]=pos(e);box.querySelector('.hint').style.opacity=0});
+    cv.addEventListener('pointermove',e=>{if(!down)return;const [x,y]=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke();lx=x;ly=y;pts++;if(pts>8){drawn=true;check()}});
+    ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,()=>down=false));
+    document.getElementById('clr').onclick=()=>{ctx.clearRect(0,0,cv.width,cv.height);drawn=false;pts=0;box.querySelector('.hint').style.opacity=1;check()};
+    const nm=document.getElementById('nm'),ok=document.getElementById('ok'),go=document.getElementById('go');
+    function check(){go.disabled=!(drawn&&ok.checked&&nm.value.trim().length>1)}
+    nm.oninput=check;ok.onchange=check;
+    const sigData=()=>{const k=Math.min(1,600/cv.width);const c2=document.createElement('canvas');c2.width=cv.width*k;c2.height=cv.height*k;const x=c2.getContext('2d');x.drawImage(cv,0,0,c2.width,c2.height);const im=x.getImageData(0,0,c2.width,c2.height);for(let i=0;i<im.data.length;i+=4){if(im.data[i+3]>0){im.data[i]=im.data[i+1]=im.data[i+2]=0}}x.putImageData(im,0,0);return c2.toDataURL('image/png')};
+    go.onclick=e=>send({type:'book',accept:true,name:nm.value.trim(),sig:sigData(),agreed:true,total:d.total,days:d.days.map(x=>x.date),ua:navigator.userAgent.slice(0,160)},e.currentTarget);
+    document.getElementById('dec').onclick=e=>{const p=e.currentTarget.parentNode;p.innerHTML='<label class="f">Let us know why (optional)<textarea id="dn"></textarea></label><div class="acts"><button class="btn ghost" id="dgo">Send: I can’t do it</button></div>';document.getElementById('dgo').onclick=ev=>send({type:'book',accept:false,note:document.getElementById('dn').value.trim()},ev.currentTarget)};
+  }
+  function agreement(){return '<div class="panel"><h2>Agreement</h2><dl class="kv" style="margin-bottom:16px"><dt>Between</dt><dd>'+esc(d.company)+' and '+esc(d.name)+'</dd>'+(d.role?'<dt>Role</dt><dd>'+esc(d.role)+'</dd>':'')+'<dt>Job</dt><dd>'+esc(d.title)+(d.client?' for '+esc(d.client):'')+'</dd><dt>Dates</dt><dd>'+esc(dates)+'</dd><dt>Fee</dt><dd>'+gbp(d.total)+(d.days.length>1?' ('+d.days.map(x=>gbp(x.rate)).join(' + ')+')':'')+'</dd><dt>Payment</dt><dd>Within '+(d.payDays||30)+' days of your invoice</dd></dl><p class="terms">'+esc(d.terms)+'</p></div>'}
+  function render(){(book?renderBook:renderPencil)();window.scrollTo(0,0)}
+  render();
+})();
+</script>
+</body>
+</html>
