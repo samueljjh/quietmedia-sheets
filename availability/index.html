@@ -112,6 +112,13 @@ h1{font-size:clamp(32px,7vw,50px);font-weight:300;letter-spacing:-1px;line-heigh
 .bar a{background:var(--bg);color:var(--fg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;flex:none}
 .bar button{width:36px;height:36px;border-radius:50%;background:rgba(128,128,128,.25);flex:none;font-size:18px}
 @media (min-width:720px){.bar{left:auto;right:24px;width:380px}}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}
+.fl{display:grid;gap:4px;font-size:12px;color:var(--muted);min-width:0}.fl.full{grid-column:1/-1}.fl em{font-style:normal;color:var(--faint)}
+.fl input,.fl textarea{font:inherit;font-size:16px;color:var(--fg);background:var(--raise);border:0;border-radius:12px;padding:11px 13px;width:100%;outline:none;box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .15s}
+.fl input:focus,.fl textarea:focus{box-shadow:inset 0 0 0 1px var(--line-strong)}.fl textarea{resize:vertical;min-height:84px}
+@media (max-width:520px){.form{grid-template-columns:1fr}}
+.btn[disabled]{opacity:.5}.ask .err2{color:#E0877A;font-size:14px;margin-top:10px}
+.ask .alt{font-size:13px;color:var(--muted);margin-top:12px}.ask .alt a{color:inherit}
 .foot{font-size:12px;color:var(--muted);margin-top:22px;text-align:center}
 .err{padding:40px 0;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.rv,.d,.stage,.detail{animation:none!important;opacity:1}.bar{transition:none}}
@@ -123,10 +130,10 @@ h1{font-size:clamp(32px,7vw,50px);font-weight:300;letter-spacing:-1px;line-heigh
     <button class="ib" id="theme" aria-label="Switch light or dark"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg></button></div>
   <div id="app"><p class="err">Loading…</p></div>
 </div>
-<div class="bar" id="bar"><span id="bartxt"></span><a id="barlink" href="#">Enquire</a><button id="barclear" aria-label="Clear">×</button></div>
+<div class="bar" id="bar"><span id="bartxt"></span><a id="barlink" href="#ask">Request</a><button id="barclear" aria-label="Clear">×</button></div>
 <script>
 const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';
-const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok)throw new Error('rpc '+r.status);return r.json()};
+const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok){let m='';try{m=(await r.json()).message}catch(e){}throw new Error(m||'error '+r.status)}return r.json()};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad=n=>String(n).padStart(2,'0');const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const fmt=(d,o)=>d.toLocaleDateString('en-GB',o);const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -164,17 +171,36 @@ document.getElementById('theme').onclick=()=>{const dark=root.dataset.theme?root
     return '<div class="calbar"><b>'+w0.getDate()+'–'+w6.getDate()+' '+(w0.getMonth()===w6.getMonth()?fmt(w6,{month:'short'}):fmt(w0,{month:'short'})+'–'+fmt(w6,{month:'short'}))+'<span>'+w6.getFullYear()+'</span></b>'+nav(w0>monday(today),addD(w0,7)<=last)+'</div>'+segs()+'<div class="stage '+anim+'" id="stage"><div class="week">'+rows+'</div></div>'};
   const list=()=>{const ks=keys.filter(k=>['free','maybe'].includes(stateOf(k)));let h='',lastM='';ks.forEach(k=>{const dt=new Date(k);const m=MON[dt.getMonth()]+' '+dt.getFullYear();if(m!==lastM){h+='<div class="lh">'+m+'</div>';lastM=m}const st=stateOf(k);h+='<button class="wd '+st+(sel.has(k)?' sel':'')+'" data-k="'+k+'"><span class="dl"><small>'+fmt(dt,{weekday:'short'})+'</small><b>'+dt.getDate()+'</b></span><span class="st"><b>'+words[st]+'</b><span>'+explain(k)+'</span></span>'+mks(k)+'</button>'});
     return '<div class="calbar"><b>Free and possible days<span>next '+Math.round(keys.length/7)+' weeks</span></b></div>'+segs()+'<div class="stage '+anim+'" id="stage"><div class="list">'+(h||'<p class="err">Nothing free in this window. Ask anyway; schedules move.</p>')+'</div></div>'};
-  const ask=()=>{const l=[...sel].sort();const body='Hi, we would like to enquire about '+(l.length?l.map(k=>fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})+(stateOf(k)==='maybe'?' (shown as possible)':'')).join(', '):'some dates')+'.\n\nProject: \nWhere: \nWhat we need: \n\nThanks,';
-    return '<section class="ask rv" style="animation-delay:.2s"><h2>'+(l.length?l.length+' day'+(l.length>1?'s':'')+' selected':'Want to book us?')+'</h2><p>'+(l.length?'Send these across and we will confirm within the day.':'Tap the free or possible days you have in mind, or just get in touch.')+'</p>'+(l.length?'<div class="chips">'+l.map(k=>'<span class="chip'+(stateOf(k)==='maybe'?' m':'')+'">'+fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'})+'<button data-rm="'+k+'" aria-label="Remove">×</button></span>').join('')+'</div>':'')+
-    '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" id="asklink" href="mailto:'+esc(email)+'?subject='+encodeURIComponent('Availability enquiry'+(l.length?': '+l.map(k=>fmt(new Date(k),{day:'numeric',month:'short'})).join(', '):''))+'&body='+encodeURIComponent(body)+'">Enquire'+(l.length?' about these dates':'')+'</a>'+(l.length?'<button class="btn ghost" data-clear>Clear</button>':'')+'</div></section>'};
+  /* The request goes straight into Studio (submit_enquiry) as a request to approve. Email stays as a fallback. */
+  const F={name:'',email:'',phone:'',company:'',project:'',location:'',details:''};let sent=null,sending=false,sendErr='';
+  const dl=k=>fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'});
+  const mailHref=l=>{const body='Hi, we would like to enquire about '+(l.length?l.map(k=>dl(k)+(stateOf(k)==='maybe'?' (shown as possible)':'')).join(', '):'some dates')+'.\n\nProject: '+F.project+'\nWhere: '+F.location+'\nWhat we need: '+F.details+'\n\nThanks,\n'+F.name;
+    return 'mailto:'+esc(email)+'?subject='+encodeURIComponent('Availability enquiry'+(l.length?': '+l.map(k=>fmt(new Date(k),{day:'numeric',month:'short'})).join(', '):''))+'&body='+encodeURIComponent(body)};
+  const field=(k,l,type,opt,ph,ac)=>'<label class="fl'+(type==='area'?' full':'')+'"><span>'+l+(opt?' <em>(optional)</em>':'')+'</span>'+(type==='area'?'<textarea data-f="'+k+'" rows="3" placeholder="'+esc(ph||'')+'">'+esc(F[k])+'</textarea>':'<input data-f="'+k+'" type="'+type+'" value="'+esc(F[k])+'" placeholder="'+esc(ph||'')+'"'+(ac?' autocomplete="'+ac+'"':'')+(opt?'':' required')+'>')+'</label>';
+  const ask=()=>{const l=[...sel].sort();
+    if(sent)return '<section class="ask rv" id="ask"><h2>Request sent</h2><p>Thanks, '+esc(sent.name.split(' ')[0])+'. '+(sent.dates.length?'We have your request for these dates and will confirm by email within the day.':'We have your message and will come back to you within the day.')+'</p>'+(sent.dates.length?'<div class="chips">'+sent.dates.map(x=>'<span class="chip'+(x.maybe?' m':'')+'">'+dl(x.d)+'</span>').join('')+'</div>':'')+'<button class="btn ghost" data-again>Send another request</button></section>';
+    return '<section class="ask rv" id="ask" style="animation-delay:.2s"><h2>'+(l.length?l.length+' day'+(l.length>1?'s':'')+' selected':'Want to book us?')+'</h2><p>'+(l.length?'Send the request and we will confirm within the day. Nothing is booked until we do.':'Tap the free or possible days you have in mind, or just send us a note.')+'</p>'+(l.length?'<div class="chips">'+l.map(k=>'<span class="chip'+(stateOf(k)==='maybe'?' m':'')+'">'+dl(k)+'<button type="button" data-rm="'+k+'" aria-label="Remove">×</button></span>').join('')+'</div>':'')+
+    '<form id="askf" novalidate><div class="form">'+field('name','Your name','text',0,'','name')+field('email','Email','email',0,'','email')+field('company','Company','text',1,'','organization')+field('phone','Phone','tel',1,'','tel')+field('project','Project','text',1,'Brand film, event, interview…')+field('location','Where','text',1,'')+field('details','What you need','area',1,'Crew, rough timings, anything we should know')+'</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit"'+(sending?' disabled':'')+'>'+(sending?'Sending…':l.length?'Request these dates':'Send')+'</button>'+(l.length?'<button type="button" class="btn ghost" data-clear>Clear</button>':'')+'</div>'+(sendErr?'<p class="err2">'+esc(sendErr)+'</p>':'')+'</form>'+
+    '<p class="alt">Rather email? <a id="asklink" href="'+mailHref(l)+'">'+esc(email)+'</a></p></section>'};
+  async function send(){const l=[...sel].sort();if(!F.name.trim()){sendErr='Please add your name.';render(true);return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(F.email.trim())){sendErr='Please add a valid email so we can reply.';render(true);return}
+    sending=true;sendErr='';render(true);const dates=l.map(k=>({d:k,maybe:stateOf(k)==='maybe'}));
+    try{await rpc('submit_enquiry',{p_slug:'quiet-media',p_data:{...F,dates}});sent={name:F.name.trim(),dates};sel.clear();open=null;F.details='';F.project='';F.location=''}
+    catch(e){sendErr='Could not send: '+(e.message||'try again')+'. Try again, or email '+email+'.'}
+    sending=false;render(true);if(sent)document.getElementById('ask').scrollIntoView({behavior:'smooth',block:'center'})}
   const render=(keepScroll)=>{const y=window.scrollY;app.innerHTML=hero()+'<section class="cal rv" style="animation-delay:.1s">'+(view==='month'?month():view==='week'?week():list())+legend()+'<div class="detail'+(open?' on':'')+'">'+(open?'<b>'+fmt(new Date(open),{weekday:'long',day:'numeric',month:'long'})+' · '+words[stateOf(open)]+'</b><p>'+explain(open)+(stateOf(open)==='maybe'?'<br>Editing days can often be moved for the right project. Add it to your enquiry and we will tell you.':'')+'</p>':'')+'</div></section>'+ask()+'<p class="foot">Updated '+fmt(new Date(data.updated||Date.now()),{day:'numeric',month:'long'})+' · quietmedia.co.uk</p>';
-    const bar=document.getElementById('bar');const l=[...sel];bar.classList.toggle('on',l.length>0);if(l.length){document.getElementById('bartxt').textContent=l.length+' day'+(l.length>1?'s':'')+' selected';document.getElementById('barlink').href=document.getElementById('asklink').href}
+    const bar=document.getElementById('bar');const l=[...sel];bar.classList.toggle('on',l.length>0);if(l.length){document.getElementById('bartxt').textContent=l.length+' day'+(l.length>1?'s':'')+' selected';}
     anim='';if(keepScroll)window.scrollTo(0,y)};
   app.addEventListener('click',e=>{const nv=e.target.closest('[data-nav]');if(nv&&!nv.disabled){const n=+nv.dataset.nav;if(view==='month')cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);else wk=addD(wk,7*n);anim=n>0?'sl':'sr';render(true);return}
     const vb=e.target.closest('[data-view]');if(vb){view=vb.dataset.view;if(view==='week')wk=monday(open?new Date(open):cur>today?cur:today);if(view==='month')cur=new Date((open?new Date(open):wk).getFullYear(),(open?new Date(open):wk).getMonth(),1);try{localStorage.setItem('qm-av-view',view)}catch(x){}anim='zi';render(true);return}
     const d=e.target.closest('[data-k]');if(d&&!d.disabled){const k=d.dataset.k;if(sel.has(k))sel.delete(k);else sel.add(k);open=k;render(true);return}
     const rm=e.target.closest('[data-rm]');if(rm){sel.delete(rm.dataset.rm);render(true);return}
-    if(e.target.closest('[data-clear]')){sel.clear();open=null;render(true)}});
+    if(e.target.closest('[data-clear]')){sel.clear();open=null;render(true);return}
+    if(e.target.closest('[data-again]')){sent=null;render(true);return}
+    const ml=e.target.closest('#asklink');if(ml)ml.href=mailHref([...sel].sort())});
+  app.addEventListener('input',e=>{const f=e.target.dataset&&e.target.dataset.f;if(f)F[f]=e.target.value});
+  app.addEventListener('submit',e=>{e.preventDefault();if(!sending)send()});
+  document.getElementById('barlink').onclick=e=>{e.preventDefault();const a=document.getElementById('ask');if(!a)return;a.scrollIntoView({behavior:'smooth',block:'start'});const n=a.querySelector('[data-f="name"]');if(n&&!n.value)setTimeout(()=>n.focus({preventScroll:true}),400)};
   document.getElementById('barclear').onclick=()=>{sel.clear();open=null;render(true)};
   let sx=null;app.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&e.target.closest('#stage'))sx={x:e.clientX,y:e.clientY}});
   app.addEventListener('pointerup',e=>{if(!sx)return;const dx=e.clientX-sx.x,dy=e.clientY-sx.y;sx=null;if(view!=='list'&&Math.abs(dx)>60&&Math.abs(dx)>2*Math.abs(dy)){const b=document.querySelector('[data-nav="'+(dx<0?1:-1)+'"]');if(b&&!b.disabled)b.click()}});
