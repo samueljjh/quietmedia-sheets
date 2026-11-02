@@ -12,10 +12,10 @@
 <style>
 /* Layout: phone first. Free days are the bright thing on the page; everything else recedes. Month, week and list views share one data model.
    Marks follow the studio app: solid square = filming, hollow square = editing (often movable), dot = other commitment. */
-:root{--bg:#0A0A0A;--surface:#141413;--raise:#1D1C1A;--raise2:#262522;--fg:#FFFFFF;--muted:#9A918A;--faint:#5E5852;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.18);--tan:#8A7F76;--sand:#DDD5C3;
+:root{--free:#9DB89A;--free-fg:#0E1A0F;--edit:#D07A3C;--busy:#B5473F;--bg:#0A0A0A;--surface:#141413;--raise:#1D1C1A;--raise2:#262522;--fg:#FFFFFF;--muted:#9A918A;--faint:#5E5852;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.18);--tan:#8A7F76;--sand:#DDD5C3;
   --font:'DM Sans','Helvetica Neue',Arial,sans-serif;--ease:cubic-bezier(.16,1,.3,1);--r:14px;--rxl:22px;color-scheme:dark}
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}}
-:root[data-theme="light"]{--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;--free:#7E9E7A;--free-fg:#FFFFFF;--edit:#B35A1E;--busy:#992E26;color-scheme:light}}
+:root[data-theme="light"]{--free:#7E9E7A;--free-fg:#FFFFFF;--edit:#B35A1E;--busy:#992E26;--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}html,body{background:var(--bg)}
 body{font-family:var(--font);font-weight:300;color:var(--fg);font-size:15px;line-height:1.5;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));-webkit-font-smoothing:antialiased;overscroll-behavior-x:none}
@@ -44,8 +44,8 @@ h1{font-size:clamp(32px,7vw,50px);font-weight:300;letter-spacing:-1px;line-heigh
 .mk.f{background:var(--fg)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin:14px 2px 0;font-size:12px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:7px}
-.legend .sw{width:12px;height:12px;border-radius:4px;background:var(--fg)}
-.legend .sw.m{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-strong)}.legend .sw.x{background:var(--raise);box-shadow:inset 0 0 0 1px var(--line)}
+.legend .sw{width:14px;height:14px;border-radius:4px;background:var(--free)}
+.legend .sw.p{background:transparent;box-shadow:inset 0 0 0 1.5px var(--free)}.legend .sw.e{background:color-mix(in srgb,var(--edit) 22%,transparent);box-shadow:inset 0 0 0 1.5px var(--edit)}.legend .sw.x{background:color-mix(in srgb,var(--busy) 18%,transparent);box-shadow:inset 0 0 0 1px var(--busy)}.legend .sw.o{background:var(--raise)}
 /* calendar card */
 .cal{border-radius:var(--rxl);background:var(--surface);padding:16px 14px 14px;overflow:hidden}
 .calbar{display:flex;align-items:center;gap:8px;margin-bottom:10px}
@@ -65,27 +65,32 @@ h1{font-size:clamp(32px,7vw,50px);font-weight:300;letter-spacing:-1px;line-heigh
 .d .n{font-size:14px;font-variant-numeric:tabular-nums;line-height:1}
 .d.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line);opacity:.5}
 .d.past{opacity:.25}
-.d.free{background:var(--fg);color:var(--bg)}.d.free .n{font-weight:500}
-.d.maybe{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-strong);color:var(--fg)}.d.maybe .n{font-weight:400}
-.d.booked{background:var(--raise);opacity:.55}
+.d.free{background:var(--free);color:var(--free-fg)}.d.free .n{font-weight:500}
+.d.part{background:color-mix(in srgb,var(--free) 14%,transparent);box-shadow:inset 0 0 0 1.5px var(--free);color:var(--fg)}.d.part .n{font-weight:400}
+.d.edit{background:color-mix(in srgb,var(--edit) 20%,transparent);box-shadow:inset 0 0 0 1.5px var(--edit);color:var(--edit)}.d.edit .n{font-weight:500}
+.d.booked{background:color-mix(in srgb,var(--busy) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--busy) 70%,transparent);color:var(--busy)}
+.d.booked .n{text-decoration:line-through;text-decoration-thickness:1px}
+.d.edit.sel{background:var(--edit);color:#fff}
 .d.today::after{content:'';position:absolute;bottom:5px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.7}
 .d.sel{box-shadow:0 0 0 2px var(--fg),0 0 0 5px var(--bg);transform:scale(1.05);z-index:1}
+.d.booked:hover,.d.booked:active{transform:none!important}
 .d:not([disabled]):hover{transform:translateY(-2px)}.d:not([disabled]):active{transform:scale(.94)}
 .d .mks{display:flex;gap:4px;height:12px;align-items:center}
-.d.free .mk.e{border-color:var(--bg)}.d.free .mk.f{background:var(--bg)}
-.d .mk.e{border-color:var(--fg)}.d.booked .mk{opacity:.8}
+.d .mk{width:9px;height:9px;border-radius:3px}.d .mk.f{background:currentColor}.d .mk.e{border:1.5px solid currentColor;background:transparent}.d .mk.b{width:6px;height:6px;background:currentColor;opacity:.8}
 /* week */
 .week{display:flex;flex-direction:column;gap:6px}
 .wd{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 10px;border-radius:var(--r);background:var(--raise);text-align:left;color:var(--fg);transition:transform .15s var(--ease),background .2s}
-.wd.free{background:var(--fg);color:var(--bg)}.wd.maybe{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-strong)}
-.wd.off,.wd.booked{opacity:.5}.wd.past{opacity:.3}
+.wd.free{background:var(--free);color:var(--free-fg)}.wd.part{background:color-mix(in srgb,var(--free) 14%,transparent);box-shadow:inset 0 0 0 1.5px var(--free)}
+.wd.edit{background:color-mix(in srgb,var(--edit) 18%,transparent);box-shadow:inset 0 0 0 1.5px var(--edit)}.wd.edit .st b{color:var(--edit)}
+.wd.booked{background:color-mix(in srgb,var(--busy) 14%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--busy) 70%,transparent)}.wd.booked .st b{color:var(--busy)}
+.wd.off{opacity:.5}.wd.past{opacity:.3}
 .wd.sel{box-shadow:0 0 0 2px var(--fg),0 0 0 5px var(--bg)}
 .wd:not([disabled]):active{transform:scale(.985)}
 .wd .dl{display:flex;flex-direction:column;align-items:center;line-height:1.1}
 .wd .dl small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}.wd .dl b{font-size:20px;font-weight:300}
 .wd .st{min-width:0}.wd .st b{font-weight:500;font-size:14px;display:block}.wd .st span{font-size:12px;opacity:.75;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wd .mks{display:flex;gap:6px;align-items:center}
-.wd.free .mk.e{border-color:var(--bg)}.wd.free .mk.f{background:var(--bg)}
+.wd .mk.f{background:currentColor}.wd .mk.e{border:2px solid currentColor;background:transparent}.wd .mk.b{background:currentColor}
 /* list */
 .list{display:flex;flex-direction:column;gap:6px}
 .lh{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tan);margin:12px 4px 2px}
@@ -104,7 +109,13 @@ h1{font-size:clamp(32px,7vw,50px);font-weight:300;letter-spacing:-1px;line-heigh
 .ask p{color:var(--muted);margin-bottom:12px;max-width:52ch;font-size:14px}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--raise);font-size:13px}
-.chip.m{box-shadow:inset 0 0 0 1px var(--line-strong);background:transparent}
+.chip.m{box-shadow:inset 0 0 0 1px var(--free);background:transparent}.chip.e{box-shadow:inset 0 0 0 1.5px var(--edit);background:color-mix(in srgb,var(--edit) 16%,transparent);color:var(--fg)}
+.gate{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:grid;place-items:end center;padding:16px;animation:fd .25s var(--ease)}@keyframes fd{from{opacity:0}}
+.gate .box{width:min(100%,440px);background:var(--surface);border-radius:var(--rxl);padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 0 0 1.5px var(--edit);animation:rv .4s var(--ease)}
+@media (min-width:600px){.gate{place-items:center}}
+.gate .tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--edit)}
+.gate h2{font-size:22px;font-weight:300;letter-spacing:-.3px;margin:6px 0 8px}.gate p{color:var(--muted);font-size:14px;margin-bottom:10px}.gate p b{color:var(--fg);font-weight:500}
+.gate .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.gate .btn.go{background:var(--edit);color:#fff}
 .chip button{color:var(--muted);font-size:16px;line-height:1}
 .bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;gap:8px;align-items:center;padding:8px 8px 8px 16px;border-radius:999px;background:var(--fg);color:var(--bg);box-shadow:0 14px 40px rgba(0,0,0,.35);transform:translateY(130%);transition:transform .45s var(--ease)}
 .bar.on{transform:none}
@@ -146,54 +157,64 @@ document.getElementById('theme').onclick=()=>{const dark=root.dataset.theme?root
   const people=data.people||[{id:'qm',name:'Quiet Media'}];const email=data.email||'hello@quietmedia.co.uk';
   const days={};for(const [k,v] of Object.entries(data.days||{})){days[k]=typeof v==='string'?(v==='off'?'off':{s:v,by:{}}):v}
   const today=new Date();today.setHours(0,0,0,0);const keys=Object.keys(days).sort();const last=keys.length?new Date(keys[keys.length-1]):today;
-  /* A day is FREE if everyone shown is free; MAYBE if someone is free or someone is only editing (editing can often move); BOOKED otherwise. */
-  const stateOf=k=>{const d=days[k];const dt=new Date(k);if(!d||d==='off')return 'off';if(dt<today)return 'past';const v=people.map(p=>d.by[p.id]||(people.length===1&&!Object.keys(d.by).length?(d.s==='free'?'free':'busy'):'free'));
-    if(v.every(x=>x==='free'))return 'free';if(v.some(x=>x==='free'||x==='edit'))return 'maybe';return 'booked'};
-  const label={free:'Free',edit:'Editing',filming:'Filming',busy:'Booked'};const words={free:'Free',maybe:'Possibly',booked:'Booked',off:'',past:''};
-  const explain=k=>{const d=days[k];if(!d||d==='off')return '';const parts=people.map(p=>{const v=d.by[p.id]||'free';return esc(p.name)+' · '+label[v]+(v==='edit'?' (may be movable)':'')});return parts.join(' · ')};
-  const mks=k=>{const d=days[k];if(!d||d==='off')return '';return '<span class="mks">'+people.map(p=>{const v=d.by[p.id]||'free';return v==='filming'?'<i class="mk f" title="Filming"></i>':v==='edit'?'<i class="mk e" title="Editing, may be movable"></i>':v==='busy'?'<i class="mk b" title="Booked"></i>':''}).join('')+'</span>'};
-  const selectable=k=>['free','maybe'].includes(stateOf(k));
+  /* Colour per day: FREE (sage) everyone shown is free; PART (sage outline) someone is free; EDIT (orange) nobody free but editing,
+     which only moves for filming on a bigger job; BOOKED (red) filming or unavailable. Weekends and past days are greyed. */
+  const valsOf=d=>people.map(p=>d.by[p.id]||(people.length===1&&!Object.keys(d.by).length?(d.s==='free'?'free':'busy'):'free'));
+  const stateOf=k=>{const d=days[k];const dt=new Date(k);if(!d||d==='off')return 'off';if(dt<today)return 'past';const v=valsOf(d);
+    if(v.every(x=>x==='free'))return 'free';if(v.some(x=>x==='free'))return 'part';if(v.some(x=>x==='edit'))return 'edit';return 'booked'};
+  const label={free:'Free',edit:'Editing',filming:'Filming',busy:'Unavailable'};const words={free:'Free',part:'Partly free',edit:'Editing',booked:'Booked',off:'',past:''};
+  const explain=k=>{const d=days[k];if(!d||d==='off')return '';const v=valsOf(d);if(people.length===1)return v[0]==='free'?'Free to request':label[v[0]];return people.map((p,i)=>esc(p.name)+' · '+label[v[i]]).join(' · ')};
+  const mks=k=>{const d=days[k];if(!d||d==='off')return '';const v=valsOf(d);return '<span class="mks">'+v.map(x=>x==='filming'?'<i class="mk f" title="Filming"></i>':x==='edit'?'<i class="mk e" title="Editing"></i>':x==='busy'?'<i class="mk b" title="Unavailable"></i>':'').join('')+'</span>'};
+  const selectable=k=>['free','part','edit'].includes(stateOf(k));const tappable=k=>selectable(k)||stateOf(k)==='booked';
+  const editOk=new Set();let gate=null;
   const sel=new Set();let view='month',cur=new Date(today.getFullYear(),today.getMonth(),1),wk=monday(today),anim='',open=null;
   try{const v=localStorage.getItem('qm-av-view');if(v)view=v}catch(e){}
   const nextOf=(st,pid)=>keys.find(k=>{const d=days[k];if(!d||d==='off'||new Date(k)<today)return false;return pid?(d.by[pid]||'free')==='free':stateOf(k)===st});
   const count=(n,st)=>keys.filter(k=>{const dt=new Date(k);return dt>=today&&dt<addD(today,n)&&stateOf(k)===st}).length;
-  const hero=()=>{const nf=nextOf('free');return '<section class="hero rv"><div class="eyebrow">Availability</div><h1>'+(nf?'Next free day: '+fmt(new Date(nf),{weekday:'long',day:'numeric',month:'long'}):'Fully booked for now')+'</h1><p class="lead">Bright days are free. Dimmer days with a hollow square are editing days, which can sometimes move; ask. Tap days to build an enquiry.</p>'+
+  const hero=()=>{const nf=nextOf('free');return '<section class="hero rv"><div class="eyebrow">Availability</div><h1>'+(nf?'Next free day: '+fmt(new Date(nf),{weekday:'long',day:'numeric',month:'long'}):'Fully booked for now')+'</h1><p class="lead">Green days are free: tap them to build a request. Orange days are booked for editing and only move for filming on a bigger project. Red days are booked.</p>'+
     '<div class="next">'+(people.length>1?people.map(p=>{const k=nextOf('free',p.id);return '<div class="tile"><small>'+esc(p.name)+' next free</small><b>'+(k?fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'}):'Ask us')+'</b></div>'}).join(''):'')+
-    '<div class="tile"><small>Free, next 30 days</small><b>'+count(30,'free')+'</b><span>'+(count(30,'maybe')?'+ '+count(30,'maybe')+' possible':'')+'</span></div><div class="tile"><small>Free, next 90 days</small><b>'+count(90,'free')+'</b><span>'+(count(90,'maybe')?'+ '+count(90,'maybe')+' possible':'')+'</span></div></div></section>'};
-  const legend=()=>'<div class="legend"><span><i class="sw"></i>Free</span><span><i class="sw m"></i>Possibly</span><span><i class="sw x"></i>Booked</span><span><i class="mk f"></i>Filming</span><span><i class="mk e"></i>Editing, may move</span></div>'+(people.length>1?'<div class="pw">'+people.map(p=>'<span class="who"><i>'+esc(p.name.slice(0,1))+'</i>'+esc(p.name)+'</span>').join('')+'</div>':'');
+    '<div class="tile"><small>Free, next 30 days</small><b>'+count(30,'free')+'</b><span>'+(count(30,'part')?'+ '+count(30,'part')+' partly free':'')+'</span></div><div class="tile"><small>Free, next 90 days</small><b>'+count(90,'free')+'</b><span>'+(count(90,'part')?'+ '+count(90,'part')+' partly free':'')+'</span></div></div></section>'};
+  const legend=()=>'<div class="legend"><span><i class="sw"></i>Free</span>'+(people.length>1?'<span><i class="sw p"></i>Partly free</span>':'')+'<span><i class="sw e"></i>Editing, filming requests only</span><span><i class="sw x"></i>Booked</span><span><i class="sw o"></i>Weekend or past</span></div>'+(people.length>1?'<div class="pw">'+people.map(p=>'<span class="who"><i>'+esc(p.name.slice(0,1))+'</i>'+esc(p.name)+'</span>').join('')+'</div>':'');
   const segs=()=>'<div class="seg">'+[['month','Month'],['week','Week'],['list','List']].map(([k,l])=>'<button data-view="'+k+'" aria-pressed="'+(view===k)+'">'+l+'</button>').join('')+'</div>';
   const nav=(prevOk,nextOk)=>'<button class="ib" data-nav="-1" '+(prevOk?'':'disabled')+' aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" data-nav="1" '+(nextOk?'':'disabled')+' aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>';
-  const cell=(dt,i)=>{const k=key(dt);const st=stateOf(k);const cls=['d',st,key(dt)===key(today)?'today':'',sel.has(k)?'sel':''].filter(Boolean).join(' ');return '<button class="'+cls+'" data-k="'+k+'" style="animation-delay:'+(i*10)+'ms" '+(selectable(k)?'':'disabled')+'><span class="n">'+dt.getDate()+'</span>'+(st==='off'||st==='past'?'':mks(k))+'</button>'};
+  const cell=(dt,i)=>{const k=key(dt);const st=stateOf(k);const cls=['d',st,key(dt)===key(today)?'today':'',sel.has(k)?'sel':''].filter(Boolean).join(' ');return '<button class="'+cls+'" data-k="'+k+'" style="animation-delay:'+(i*10)+'ms" '+(tappable(k)?'':'disabled')+' aria-label="'+fmt(dt,{weekday:'long',day:'numeric',month:'long'})+(words[st]?', '+words[st]:'')+'"><span class="n">'+dt.getDate()+'</span>'+(st==='off'||st==='past'||people.length===1&&st!=='booked'?'':mks(k))+'</button>'};
   const month=()=>{const m0=cur;const off=(m0.getDay()+6)%7;const dim=new Date(m0.getFullYear(),m0.getMonth()+1,0).getDate();let cells='';for(let i=0;i<off;i++)cells+='<div class="d out"></div>';for(let n=1;n<=dim;n++)cells+=cell(new Date(m0.getFullYear(),m0.getMonth(),n),n);
     const prevOk=m0>new Date(today.getFullYear(),today.getMonth(),1),nextOk=new Date(m0.getFullYear(),m0.getMonth()+1,1)<=last;
     return '<div class="calbar"><b>'+MON[m0.getMonth()]+'<span>'+m0.getFullYear()+'</span></b>'+nav(prevOk,nextOk)+'</div>'+segs()+'<div class="dow">'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="stage '+anim+'" id="stage"><div class="grid">'+cells+'</div></div>'};
-  const week=()=>{const w0=wk,w6=addD(w0,6);let rows='';for(let i=0;i<7;i++){const dt=addD(w0,i);const k=key(dt);const st=stateOf(k);rows+='<button class="wd '+st+(sel.has(k)?' sel':'')+'" data-k="'+k+'" '+(selectable(k)?'':'disabled')+'><span class="dl"><small>'+fmt(dt,{weekday:'short'})+'</small><b>'+dt.getDate()+'</b></span><span class="st"><b>'+(st==='off'?'Weekend':st==='past'?'':words[st])+'</b><span>'+(st==='past'||st==='off'?'':explain(k))+'</span></span>'+(st==='off'||st==='past'?'<span></span>':mks(k))+'</button>'}
+  const week=()=>{const w0=wk,w6=addD(w0,6);let rows='';for(let i=0;i<7;i++){const dt=addD(w0,i);const k=key(dt);const st=stateOf(k);rows+='<button class="wd '+st+(sel.has(k)?' sel':'')+'" data-k="'+k+'" '+(tappable(k)?'':'disabled')+'><span class="dl"><small>'+fmt(dt,{weekday:'short'})+'</small><b>'+dt.getDate()+'</b></span><span class="st"><b>'+(st==='off'?'Weekend':st==='past'?'':words[st])+'</b><span>'+(st==='past'||st==='off'?'':explain(k))+'</span></span>'+(st==='off'||st==='past'?'<span></span>':mks(k))+'</button>'}
     return '<div class="calbar"><b>'+w0.getDate()+'–'+w6.getDate()+' '+(w0.getMonth()===w6.getMonth()?fmt(w6,{month:'short'}):fmt(w0,{month:'short'})+'–'+fmt(w6,{month:'short'}))+'<span>'+w6.getFullYear()+'</span></b>'+nav(w0>monday(today),addD(w0,7)<=last)+'</div>'+segs()+'<div class="stage '+anim+'" id="stage"><div class="week">'+rows+'</div></div>'};
-  const list=()=>{const ks=keys.filter(k=>['free','maybe'].includes(stateOf(k)));let h='',lastM='';ks.forEach(k=>{const dt=new Date(k);const m=MON[dt.getMonth()]+' '+dt.getFullYear();if(m!==lastM){h+='<div class="lh">'+m+'</div>';lastM=m}const st=stateOf(k);h+='<button class="wd '+st+(sel.has(k)?' sel':'')+'" data-k="'+k+'"><span class="dl"><small>'+fmt(dt,{weekday:'short'})+'</small><b>'+dt.getDate()+'</b></span><span class="st"><b>'+words[st]+'</b><span>'+explain(k)+'</span></span>'+mks(k)+'</button>'});
-    return '<div class="calbar"><b>Free and possible days<span>next '+Math.round(keys.length/7)+' weeks</span></b></div>'+segs()+'<div class="stage '+anim+'" id="stage"><div class="list">'+(h||'<p class="err">Nothing free in this window. Ask anyway; schedules move.</p>')+'</div></div>'};
+  const list=()=>{const ks=keys.filter(k=>selectable(k));let h='',lastM='';ks.forEach(k=>{const dt=new Date(k);const m=MON[dt.getMonth()]+' '+dt.getFullYear();if(m!==lastM){h+='<div class="lh">'+m+'</div>';lastM=m}const st=stateOf(k);h+='<button class="wd '+st+(sel.has(k)?' sel':'')+'" data-k="'+k+'"><span class="dl"><small>'+fmt(dt,{weekday:'short'})+'</small><b>'+dt.getDate()+'</b></span><span class="st"><b>'+words[st]+'</b><span>'+explain(k)+'</span></span>'+mks(k)+'</button>'});
+    return '<div class="calbar"><b>Days you can request<span>next '+Math.round(keys.length/7)+' weeks</span></b></div>'+segs()+'<div class="stage '+anim+'" id="stage"><div class="list">'+(h||'<p class="err">Nothing free in this window. Ask anyway; schedules move.</p>')+'</div></div>'};
   /* The request goes straight into Studio (submit_enquiry) as a request to approve. Email stays as a fallback. */
   const F={name:'',email:'',phone:'',company:'',project:'',location:'',details:''};let sent=null,sending=false,sendErr='';
   const dl=k=>fmt(new Date(k),{weekday:'short',day:'numeric',month:'short'});
-  const mailHref=l=>{const body='Hi, we would like to enquire about '+(l.length?l.map(k=>dl(k)+(stateOf(k)==='maybe'?' (shown as possible)':'')).join(', '):'some dates')+'.\n\nProject: '+F.project+'\nWhere: '+F.location+'\nWhat we need: '+F.details+'\n\nThanks,\n'+F.name;
+  const mailHref=l=>{const body='Hi, we would like to enquire about '+(l.length?l.map(k=>dl(k)+(stateOf(k)==='edit'?' (an editing day, for filming as part of a bigger project)':'')).join(', '):'some dates')+'.\n\nProject: '+F.project+'\nWhere: '+F.location+'\nWhat we need: '+F.details+'\n\nThanks,\n'+F.name;
     return 'mailto:'+esc(email)+'?subject='+encodeURIComponent('Availability enquiry'+(l.length?': '+l.map(k=>fmt(new Date(k),{day:'numeric',month:'short'})).join(', '):''))+'&body='+encodeURIComponent(body)};
   const field=(k,l,type,opt,ph,ac)=>'<label class="fl'+(type==='area'?' full':'')+'"><span>'+l+(opt?' <em>(optional)</em>':'')+'</span>'+(type==='area'?'<textarea data-f="'+k+'" rows="3" placeholder="'+esc(ph||'')+'">'+esc(F[k])+'</textarea>':'<input data-f="'+k+'" type="'+type+'" value="'+esc(F[k])+'" placeholder="'+esc(ph||'')+'"'+(ac?' autocomplete="'+ac+'"':'')+(opt?'':' required')+'>')+'</label>';
   const ask=()=>{const l=[...sel].sort();
-    if(sent)return '<section class="ask rv" id="ask"><h2>Request sent</h2><p>Thanks, '+esc(sent.name.split(' ')[0])+'. '+(sent.dates.length?'We have your request for these dates and will confirm by email within the day.':'We have your message and will come back to you within the day.')+'</p>'+(sent.dates.length?'<div class="chips">'+sent.dates.map(x=>'<span class="chip'+(x.maybe?' m':'')+'">'+dl(x.d)+'</span>').join('')+'</div>':'')+'<button class="btn ghost" data-again>Send another request</button></section>';
-    return '<section class="ask rv" id="ask" style="animation-delay:.2s"><h2>'+(l.length?l.length+' day'+(l.length>1?'s':'')+' selected':'Want to book us?')+'</h2><p>'+(l.length?'Send the request and we will confirm within the day. Nothing is booked until we do.':'Tap the free or possible days you have in mind, or just send us a note.')+'</p>'+(l.length?'<div class="chips">'+l.map(k=>'<span class="chip'+(stateOf(k)==='maybe'?' m':'')+'">'+dl(k)+'<button type="button" data-rm="'+k+'" aria-label="Remove">×</button></span>').join('')+'</div>':'')+
+    if(sent)return '<section class="ask rv" id="ask"><h2>Request sent</h2><p>Thanks, '+esc(sent.name.split(' ')[0])+'. '+(sent.dates.length?'We have your request for these dates and will confirm by email within the day.':'We have your message and will come back to you within the day.')+'</p>'+(sent.dates.length?'<div class="chips">'+sent.dates.map(x=>'<span class="chip'+(x.edit?' e':x.maybe?' m':'')+'">'+dl(x.d)+(x.edit?' · editing day':'')+'</span>').join('')+'</div>':'')+'<button class="btn ghost" data-again>Send another request</button></section>';
+    return '<section class="ask rv" id="ask" style="animation-delay:.2s"><h2>'+(l.length?l.length+' day'+(l.length>1?'s':'')+' selected':'Want to book us?')+'</h2><p>'+(l.length?'Send the request and we will confirm within the day. Nothing is booked until we do.'+(l.some(k=>stateOf(k)==='edit')?' Orange days are booked for editing; we will tell you if they can move for your shoot.':''):'Tap the green days you have in mind, or just send us a note.')+'</p>'+(l.length?'<div class="chips">'+l.map(k=>'<span class="chip'+(stateOf(k)==='edit'?' e':stateOf(k)==='part'?' m':'')+'">'+dl(k)+(stateOf(k)==='edit'?' · editing day':'')+'<button type="button" data-rm="'+k+'" aria-label="Remove">×</button></span>').join('')+'</div>':'')+
     '<form id="askf" novalidate><div class="form">'+field('name','Your name','text',0,'','name')+field('email','Email','email',0,'','email')+field('company','Company','text',1,'','organization')+field('phone','Phone','tel',1,'','tel')+field('project','Project','text',1,'Brand film, event, interview…')+field('location','Where','text',1,'')+field('details','What you need','area',1,'Crew, rough timings, anything we should know')+'</div>'+
     '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit"'+(sending?' disabled':'')+'>'+(sending?'Sending…':l.length?'Request these dates':'Send')+'</button>'+(l.length?'<button type="button" class="btn ghost" data-clear>Clear</button>':'')+'</div>'+(sendErr?'<p class="err2">'+esc(sendErr)+'</p>':'')+'</form>'+
     '<p class="alt">Rather email? <a id="asklink" href="'+mailHref(l)+'">'+esc(email)+'</a></p></section>'};
   async function send(){const l=[...sel].sort();if(!F.name.trim()){sendErr='Please add your name.';render(true);return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(F.email.trim())){sendErr='Please add a valid email so we can reply.';render(true);return}
-    sending=true;sendErr='';render(true);const dates=l.map(k=>({d:k,maybe:stateOf(k)==='maybe'}));
-    try{await rpc('submit_enquiry',{p_slug:'quiet-media',p_data:{...F,dates}});sent={name:F.name.trim(),dates};sel.clear();open=null;F.details='';F.project='';F.location=''}
+    sending=true;sendErr='';render(true);const dates=l.map(k=>({d:k,maybe:stateOf(k)!=='free',edit:stateOf(k)==='edit'}));const ed=dates.filter(x=>x.edit);
+    const details=(ed.length?'Asked for editing day'+(ed.length>1?'s':'')+' '+ed.map(x=>dl(x.d)).join(', ')+': confirmed it is for filming as part of a bigger project or multi-day shoot.\n\n':'')+F.details;
+    try{await rpc('submit_enquiry',{p_slug:'quiet-media',p_data:{...F,details,dates:dates.map(x=>({d:x.d,maybe:x.maybe}))}});sent={name:F.name.trim(),dates};sel.clear();open=null;F.details='';F.project='';F.location=''}
     catch(e){sendErr='Could not send: '+(e.message||'try again')+'. Try again, or email '+email+'.'}
     sending=false;render(true);if(sent)document.getElementById('ask').scrollIntoView({behavior:'smooth',block:'center'})}
-  const render=(keepScroll)=>{const y=window.scrollY;app.innerHTML=hero()+'<section class="cal rv" style="animation-delay:.1s">'+(view==='month'?month():view==='week'?week():list())+legend()+'<div class="detail'+(open?' on':'')+'">'+(open?'<b>'+fmt(new Date(open),{weekday:'long',day:'numeric',month:'long'})+' · '+words[stateOf(open)]+'</b><p>'+explain(open)+(stateOf(open)==='maybe'?'<br>Editing days can often be moved for the right project. Add it to your enquiry and we will tell you.':'')+'</p>':'')+'</div></section>'+ask()+'<p class="foot">Updated '+fmt(new Date(data.updated||Date.now()),{day:'numeric',month:'long'})+' · quietmedia.co.uk</p>';
+  const render=(keepScroll)=>{const y=window.scrollY;app.innerHTML=hero()+'<section class="cal rv" style="animation-delay:.1s">'+(view==='month'?month():view==='week'?week():list())+legend()+'<div class="detail'+(open?' on':'')+'">'+(open?'<b>'+fmt(new Date(open),{weekday:'long',day:'numeric',month:'long'})+' · '+words[stateOf(open)]+'</b><p>'+(people.length>1?explain(open)+'<br>':stateOf(open)==='booked'?explain(open)+'. ':stateOf(open)==='free'?'Free to request.':'')+(stateOf(open)==='edit'?'Booked for editing. It can only move for filming as part of a bigger project or multi-day shoot.':stateOf(open)==='booked'?'Not available. Pick a green day, or ask us about alternatives.':stateOf(open)==='part'?'Not everyone is free this day. Add it and we will tell you who can do it.':'')+'</p>':'')+'</div></section>'+ask()+'<p class="foot">Updated '+fmt(new Date(data.updated||Date.now()),{day:'numeric',month:'long'})+' · quietmedia.co.uk</p>'+
+    (gate?'<div class="gate" data-gx><div class="box" role="dialog" aria-modal="true" aria-labelledby="gt"><span class="tag"><i class="mk e" style="border-color:var(--edit);width:10px;height:10px"></i>Editing day</span><h2 id="gt">'+fmt(new Date(gate),{weekday:'long',day:'numeric',month:'long'})+' is booked for editing</h2>'+
+      '<p>Edit days are not swapped for other edit days. We only move one to make room for <b>filming</b>, usually as part of a <b>bigger project or a multi-day shoot</b>.</p><p>If that is what you need, add it and tell us about the shoot below. We will let you know if it can move. Nothing is held until we confirm.</p>'+
+      '<div class="acts"><button class="btn go" data-gok>It is for filming, add it</button><button class="btn ghost" data-gx>Pick another day</button></div></div></div>':'');
     const bar=document.getElementById('bar');const l=[...sel];bar.classList.toggle('on',l.length>0);if(l.length){document.getElementById('bartxt').textContent=l.length+' day'+(l.length>1?'s':'')+' selected';}
     anim='';if(keepScroll)window.scrollTo(0,y)};
   app.addEventListener('click',e=>{const nv=e.target.closest('[data-nav]');if(nv&&!nv.disabled){const n=+nv.dataset.nav;if(view==='month')cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);else wk=addD(wk,7*n);anim=n>0?'sl':'sr';render(true);return}
     const vb=e.target.closest('[data-view]');if(vb){view=vb.dataset.view;if(view==='week')wk=monday(open?new Date(open):cur>today?cur:today);if(view==='month')cur=new Date((open?new Date(open):wk).getFullYear(),(open?new Date(open):wk).getMonth(),1);try{localStorage.setItem('qm-av-view',view)}catch(x){}anim='zi';render(true);return}
-    const d=e.target.closest('[data-k]');if(d&&!d.disabled){const k=d.dataset.k;if(sel.has(k))sel.delete(k);else sel.add(k);open=k;render(true);return}
+    if(e.target.closest('[data-gok]')){sel.add(gate);editOk.add(gate);open=gate;gate=null;render(true);return}
+    if(gate&&(e.target.matches('[data-gx]')||e.target.closest('button[data-gx]'))){gate=null;render(true);return}if(gate)return;
+    const d=e.target.closest('[data-k]');if(d&&!d.disabled){const k=d.dataset.k;open=k;if(stateOf(k)==='booked'){render(true);return}
+      if(sel.has(k))sel.delete(k);else if(stateOf(k)==='edit'&&!editOk.has(k)){gate=k;render(true);const b=document.querySelector('[data-gok]');if(b)b.focus({preventScroll:true});return}else sel.add(k);render(true);return}
     const rm=e.target.closest('[data-rm]');if(rm){sel.delete(rm.dataset.rm);render(true);return}
     if(e.target.closest('[data-clear]')){sel.clear();open=null;render(true);return}
     if(e.target.closest('[data-again]')){sent=null;render(true);return}
@@ -201,6 +222,7 @@ document.getElementById('theme').onclick=()=>{const dark=root.dataset.theme?root
   app.addEventListener('input',e=>{const f=e.target.dataset&&e.target.dataset.f;if(f)F[f]=e.target.value});
   app.addEventListener('submit',e=>{e.preventDefault();if(!sending)send()});
   document.getElementById('barlink').onclick=e=>{e.preventDefault();const a=document.getElementById('ask');if(!a)return;a.scrollIntoView({behavior:'smooth',block:'start'});const n=a.querySelector('[data-f="name"]');if(n&&!n.value)setTimeout(()=>n.focus({preventScroll:true}),400)};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&gate){gate=null;render(true)}});
   document.getElementById('barclear').onclick=()=>{sel.clear();open=null;render(true)};
   let sx=null;app.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&e.target.closest('#stage'))sx={x:e.clientX,y:e.clientY}});
   app.addEventListener('pointerup',e=>{if(!sx)return;const dx=e.clientX-sx.x,dy=e.clientY-sx.y;sx=null;if(view!=='list'&&Math.abs(dx)>60&&Math.abs(dx)>2*Math.abs(dy)){const b=document.querySelector('[data-nav="'+(dx<0?1:-1)+'"]');if(b&&!b.disabled)b.click()}});
