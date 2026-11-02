@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Calendar — Quiet Media</title>
+<meta name="description" content="Your days with Quiet Media.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap">
+<style>
+/* Layout: phone first. Free days are the bright thing on the page; everything else recedes. Month, week and list views share one data model.
+   Marks follow the studio app: solid square = filming, hollow square = editing (often movable), dot = other commitment. */
+:root{--pen:#D07A3C;--bg:#0A0A0A;--surface:#141413;--raise:#1D1C1A;--raise2:#262522;--fg:#FFFFFF;--muted:#9A918A;--faint:#5E5852;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.18);--tan:#8A7F76;--sand:#DDD5C3;
+  --font:'DM Sans','Helvetica Neue',Arial,sans-serif;--ease:cubic-bezier(.16,1,.3,1);--r:14px;--rxl:22px;color-scheme:dark}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;--pen:#B35A1E;color-scheme:light}}
+:root[data-theme="light"]{--pen:#B35A1E;--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--raise2:#E4E1DC;--fg:#0A0A0A;--muted:#6E655E;--faint:#B0A89F;--line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}html,body{background:var(--bg)}
+body{font-family:var(--font);font-weight:300;color:var(--fg);font-size:15px;line-height:1.5;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));-webkit-font-smoothing:antialiased;overscroll-behavior-x:none}
+body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");background-size:200px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.wrap{max-width:720px;margin:0 auto;padding-block:20px 120px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:10px}.brand svg{width:26px;height:26px}.brand b{font-weight:300;font-size:19px;letter-spacing:-.2px}
+.ib{width:38px;height:38px;border-radius:50%;background:var(--raise);display:grid;place-items:center;flex:none;transition:transform .15s var(--ease),background .2s}
+.ib:active{transform:scale(.92)}.ib[disabled]{opacity:.3}.ib svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.rv{opacity:0;transform:translateY(14px);animation:rv .7s var(--ease) forwards}
+@keyframes rv{to{opacity:1;transform:none}}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--tan)}
+h1{font-size:clamp(32px,7vw,50px);font-weight:300;letter-spacing:-1px;line-height:1.02;text-wrap:balance;margin:8px 0 10px}
+.lead{color:var(--muted);max-width:52ch;font-size:15px}
+.hero{padding:24px 22px;border-radius:var(--rxl);background:var(--surface);margin-bottom:12px}
+.next{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:8px;margin-top:20px}
+.tile{border-radius:var(--r);padding:12px 14px;background:var(--raise)}
+.tile small{display:block;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tan);margin-bottom:3px}
+.tile b{font-size:20px;font-weight:300;letter-spacing:-.4px;line-height:1.1;display:block}
+.tile span{color:var(--muted);font-size:12px}
+
+.mk{display:inline-block;width:9px;height:9px;border-radius:3px;background:currentColor;flex:none}.mk.e{background:transparent;border:1.5px solid currentColor}.mk.o{border-radius:50%;width:7px;height:7px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:14px 2px 0;font-size:12px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:14px;height:14px;border-radius:4px;display:inline-block}.sw.b{background:var(--fg)}.sw.p{box-shadow:inset 0 0 0 1.5px var(--pen);background:color-mix(in srgb,var(--pen) 16%,transparent)}
+.cal{border-radius:var(--rxl);background:var(--surface);padding:16px 14px 14px;overflow:hidden;margin-bottom:12px}
+.calbar{display:flex;align-items:center;gap:8px;margin-bottom:10px}.calbar b{font-size:21px;font-weight:300;letter-spacing:-.4px;flex:1;min-width:0;white-space:nowrap}.calbar b span{color:var(--muted);font-size:14px;margin-left:8px}
+.dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:center;margin-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.d{aspect-ratio:1/1.1;border-radius:12px;background:var(--raise);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative;min-width:0;color:var(--faint);transition:transform .18s var(--ease)}
+.d.out{visibility:hidden}.d .n{font-size:14px;font-variant-numeric:tabular-nums;line-height:1}.d.past{opacity:.4}
+.d.b{background:var(--fg);color:var(--bg)}.d.b .n{font-weight:500}
+.d.p{background:color-mix(in srgb,var(--pen) 16%,transparent);box-shadow:inset 0 0 0 1.5px var(--pen);color:var(--pen)}.d.p .n{font-weight:500}
+.d.t::after{content:'';position:absolute;bottom:5px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.7}
+.d.sel{box-shadow:0 0 0 2px var(--fg),0 0 0 5px var(--bg);z-index:1}
+.d .mks{display:flex;gap:3px;height:10px;align-items:center}
+.d[data-k]:active{transform:scale(.94)}
+.lh{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tan);margin:18px 4px 8px}
+.it{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start;padding:12px;border-radius:var(--r);background:var(--raise);margin-bottom:6px}
+.it.past{opacity:.5}.it.hl{box-shadow:inset 0 0 0 1.5px var(--fg)}
+.it .dl{display:flex;flex-direction:column;align-items:center;line-height:1.1;padding-top:2px}.it .dl small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.it .dl b{font-size:22px;font-weight:300}
+.it .tt{font-size:15px;font-weight:400}.it .mt{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-right:6px;vertical-align:1px}
+.pill.b{background:var(--fg);color:var(--bg)}.pill.p{box-shadow:inset 0 0 0 1px var(--pen);color:var(--pen)}
+.more{display:block;width:100%;padding:12px;border-radius:var(--r);background:var(--raise);color:var(--muted);font-size:13px;margin-top:4px}
+.foot{font-size:12px;color:var(--muted);margin-top:22px;text-align:center}.foot a{color:inherit}
+.err{padding:40px 0;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.rv{animation:none!important;opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top rv"><div class="brand"><svg viewBox="0 0 400 400" aria-hidden="true"><path d="M 296.555 343.549 A 173 173 0 1 1 343.549 296.555 L 302.822 255.828 A 117 117 0 1 0 255.828 302.822 L 296.555 343.549 Z" fill="currentColor"/></svg><b>quiet media</b></div>
+    <button class="ib" id="theme" aria-label="Switch light or dark"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg></button></div>
+  <div id="app"><p class="err">Loading…</p></div>
+</div>
+<script>
+const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';
+const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok)throw new Error('rpc '+r.status);return r.json()};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const fmt=(d,o)=>d.toLocaleDateString('en-GB',o);const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const root=document.documentElement;try{const t=localStorage.getItem('qm-av-theme');if(t)root.dataset.theme=t}catch(e){}
+document.getElementById('theme').onclick=()=>{const dark=root.dataset.theme?root.dataset.theme==='dark':!matchMedia('(prefers-color-scheme: light)').matches;root.dataset.theme=dark?'light':'dark';try{localStorage.setItem('qm-av-theme',root.dataset.theme)}catch(e){}};
+/* One client's days, published from Studio (calPayload). Booked = solid, pencil = orange outline. Square = filming, hollow = edit, dot = other. */
+(async()=>{
+  const app=document.getElementById('app');const fail=m=>{app.innerHTML='<p class="err">'+m+'</p>'};
+  const h=location.hash.slice(1);const dot=h.indexOf('.');if(dot<0)return fail('This link is incomplete. Ask for it to be sent again.');
+  let data;try{data=await rpc('get_sheet',{p_id:h.slice(0,dot),p_token:h.slice(dot+1)})}catch(e){return fail('This calendar could not be loaded. Check your connection and try again.')}
+  if(!data||!Array.isArray(data.days))return fail('This calendar is no longer shared. Ask us for a new link.');
+  document.title=(data.client||'Calendar')+' · Calendar — Quiet Media';
+  const today=new Date();today.setHours(0,0,0,0);
+  const typeName=t=>t==='Shoot'?'Filming':t==='Edit'?'Editing':t;
+  const evs=data.days.map(x=>({...x,dt:new Date(x.date),k:key(new Date(x.date))}));
+  const by={};evs.forEach(e=>(by[e.k]=by[e.k]||[]).push(e));
+  const up=evs.filter(e=>e.dt>=today),past=evs.filter(e=>e.dt<today);
+  const dayState=k=>{const l=by[k];if(!l)return '';return l.some(e=>e.status==='confirmed')?'b':'p'};
+  const mk=e=>e.type==='Shoot'?'<i class="mk"></i>':e.type==='Edit'?'<i class="mk e"></i>':'<i class="mk o"></i>';
+  let cur=new Date(today.getFullYear(),today.getMonth(),1);if(!up.length&&past.length)cur=new Date(past[past.length-1].dt.getFullYear(),past[past.length-1].dt.getMonth(),1);
+  const first=evs.length?new Date(evs[0].dt.getFullYear(),evs[0].dt.getMonth(),1):cur;const lastE=evs.length?evs[evs.length-1].dt:today;const last=new Date(Math.max(lastE,today));
+  let open=null,showPast=false;
+  const item=e=>'<div class="it'+(e.dt<today?' past':'')+(open===e.k?' hl':'')+'" data-i="'+e.k+'"><div class="dl"><small>'+fmt(e.dt,{weekday:'short'})+'</small><b>'+e.dt.getDate()+'</b><small>'+fmt(e.dt,{month:'short'})+'</small></div><div><div class="tt"><span class="pill '+(e.status==='confirmed'?'b':'p')+'">'+(e.status==='confirmed'?'Booked':'Pencil')+'</span>'+esc(typeName(e.type))+(e.half?' · half day':'')+'</div><div class="mt">'+esc([e.project||e.title,e.start&&e.finish?e.start+'–'+e.finish:'',e.location].filter(Boolean).join(' · '))+'</div></div></div>';
+  const listOf=l=>{let h='',lm='';l.forEach(e=>{const m=MON[e.dt.getMonth()]+' '+e.dt.getFullYear();if(m!==lm){h+='<div class="lh">'+m+'</div>';lm=m}h+=item(e)});return h};
+  const month=()=>{const off=(cur.getDay()+6)%7;const dim=new Date(cur.getFullYear(),cur.getMonth()+1,0).getDate();let c='';for(let i=0;i<off;i++)c+='<div class="d out"></div>';
+    for(let n=1;n<=dim;n++){const dt=new Date(cur.getFullYear(),cur.getMonth(),n);const k=key(dt);const st=dayState(k);const l=by[k]||[];
+      c+='<div class="d '+st+(dt<today?' past':'')+(k===key(today)?' t':'')+(open===k?' sel':'')+'"'+(l.length?' data-k="'+k+'" role="button" tabindex="0" aria-label="'+fmt(dt,{weekday:'long',day:'numeric',month:'long'})+', '+l.map(e=>(e.status==='confirmed'?'booked ':'pencil ')+typeName(e.type)).join(', ')+'"':'')+'><span class="n">'+n+'</span>'+(l.length?'<span class="mks">'+l.slice(0,3).map(mk).join('')+'</span>':'')+'</div>'}
+    const prevOk=cur>first,nextOk=new Date(cur.getFullYear(),cur.getMonth()+1,1)<=last;
+    return '<section class="cal rv" style="animation-delay:.08s"><div class="calbar"><b>'+MON[cur.getMonth()]+'<span>'+cur.getFullYear()+'</span></b><button class="ib" data-nav="-1" '+(prevOk?'':'disabled')+' aria-label="Previous month"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" data-nav="1" '+(nextOk?'':'disabled')+' aria-label="Next month"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>'+
+      '<div class="dow">'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="grid">'+c+'</div>'+
+      '<div class="legend"><span><i class="sw b"></i>Booked</span><span><i class="sw p"></i>Pencilled, not confirmed yet</span><span><i class="mk"></i>Filming</span><span><i class="mk e"></i>Editing</span><span><i class="mk o"></i>Other</span></div></section>'};
+  const render=()=>{const nx=up[0];const nb=up.filter(e=>e.status==='confirmed').length,np=up.length-nb;
+    app.innerHTML='<section class="hero rv"><div class="eyebrow">Calendar · '+esc(data.client)+'</div><h1>'+(nx?'Next: '+fmt(nx.dt,{weekday:'long',day:'numeric',month:'long'}):'Nothing coming up')+'</h1><p class="lead">Your days with Quiet Media. Booked days are confirmed; pencilled days are held for you until you confirm. This page updates by itself, so keep the link.</p>'+
+      '<div class="next"><div class="tile"><small>Booked ahead</small><b>'+nb+'</b><span>day'+(nb===1?'':'s')+'</span></div><div class="tile"><small>Pencilled</small><b>'+np+'</b><span>day'+(np===1?'':'s')+', to confirm</span></div></div></section>'+
+      month()+
+      '<section class="cal rv" style="animation-delay:.14s"><div class="calbar"><b>Coming up</b></div>'+(up.length?listOf(up):'<p class="mt" style="color:var(--muted)">Nothing pencilled or booked from today.</p>')+
+      (past.length?(showPast?'<div class="lh">Earlier</div>'+listOf(past.slice().reverse()):'<button class="more" data-past>Show '+past.length+' earlier day'+(past.length===1?'':'s')+'</button>'):'')+'</section>'+
+      '<p class="foot">Questions or changes: '+(data.replyEmail?'<a href="mailto:'+esc(data.replyEmail)+'">'+esc(data.replyEmail)+'</a>':'')+(data.replyPhone?' · <a href="tel:'+esc(String(data.replyPhone).replace(/[^0-9+]/g,''))+'">'+esc(data.replyPhone)+'</a>':'')+'<br>Updated '+fmt(new Date(data.updated||Date.now()),{day:'numeric',month:'long'})+' at '+new Date(data.updated||Date.now()).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' · quietmedia.co.uk</p>'};
+  app.addEventListener('click',e=>{const nv=e.target.closest('[data-nav]');if(nv&&!nv.disabled){cur=new Date(cur.getFullYear(),cur.getMonth()+(+nv.dataset.nav),1);render();return}
+    if(e.target.closest('[data-past]')){showPast=true;render();return}
+    const d=e.target.closest('.d[data-k]');if(d){open=open===d.dataset.k?null:d.dataset.k;render();const el=document.querySelector('.it[data-i="'+open+'"]');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})}});
+  app.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.d[data-k]')){e.preventDefault();e.target.click()}});
+  render();
+})();
+</script>
+</body>
+</html>
