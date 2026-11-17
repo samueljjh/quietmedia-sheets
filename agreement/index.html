@@ -18,10 +18,11 @@ body{font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-weight:300;col
 .wrap{max-width:760px;margin:0 auto;padding-block:28px 80px}
 .brand{display:flex;align-items:center;gap:10px;margin-bottom:40px}.brand svg{width:28px;height:28px}.brand b{font-weight:300;font-size:19px;letter-spacing:-.2px}
 .err{padding:40px 0;color:var(--muted)}
-.status{display:flex;gap:14px;align-items:center;background:var(--soft);border-radius:16px;padding:14px 18px;margin-bottom:28px;font-size:14px}
+.status{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--soft);border-radius:16px;padding:14px 18px;margin-bottom:28px;font-size:14px}
 .status i{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--ok)}.status i svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.4}
 .status.wait i{background:var(--raise)}.status.wait i svg{stroke:var(--fg)}
 .status b{font-weight:500;display:block}
+.status>div:nth-child(2){flex:1 1 200px;min-width:0}
 .status .acts{margin:0 0 0 auto}
 .sigs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px;margin-top:40px;break-inside:avoid}
 .sbox{background:var(--soft);border-radius:16px;padding:18px 20px;break-inside:avoid}
@@ -49,6 +50,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-off
 .err2{color:var(--warn);font-size:14px;margin-top:12px}
 .audit{margin-top:28px;font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:16px;break-inside:avoid}
 .audit dl{display:grid;grid-template-columns:auto 1fr;gap:2px 16px;margin-top:8px}.audit dd{min-width:0;overflow-wrap:anywhere}
+.onlyprint{display:none}
 .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
 /* document styles, from Studio agreements.js */
 .qa{--qa-ink:#111;--qa-muted:#6E655E;--qa-soft:#F1EFEC;--qa-line:rgba(10,10,10,.1);--qa-accent:#B08D57;color:var(--qa-ink);font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-weight:300;font-size:15px;line-height:1.65}
@@ -83,7 +85,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-off
 @media print{
   @page{size:A4;margin:16mm 16mm 18mm}
   body{padding:0;font-size:12.5px}.wrap{max-width:none;padding:0}
-  .noprint{display:none!important}
+  .noprint{display:none!important}.onlyprint{display:inline}
   .brand{margin-bottom:24px}
   .qa{font-size:12.5px}.qa h2{font-size:19px;margin-top:24px}
   .qa .qa-box,.qa .qa-call,.qa .qa-tbl td,.sbox,.status{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -112,6 +114,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-off
   const id=h.slice(0,dot),key=h.slice(dot+1);if(!/^[A-Za-z0-9_-]{6,40}$/.test(id)||!/^[A-Za-z0-9_-]{10,100}$/.test(key))return fail('This link is not valid.');
   const own=new URLSearchParams(location.search).has('own');
   let d;try{d=await rpc('get_agreement',{p_id:id,p_token:key,p_count:!own})}catch(e){return fail('This agreement could not be loaded. Check your connection and try again.')}
+  if(d&&d.off)return fail('This link has been switched off by Quiet Media. The signed agreement is still on record. If you need a copy, ask Quiet Media.');
   if(!d||!d.doc_html)return fail('This link is no longer valid. Ask Quiet Media to send it again.');
   const intact=(await sha256(d.doc_html))===d.doc_hash;
   document.title=d.title+' — Quiet Media';
@@ -121,7 +124,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-off
   function render(){
     const c=d.client;
     const status=c?'<div class="status">'+tick+'<div><b>Signed by both parties</b>In effect from '+esc(day(c.signed_at))+'.</div><div class="acts noprint"><button class="btn ghost" onclick="print()">Save as PDF</button></div></div>'
-      :'<div class="status wait noprint">'+pen+'<div><b>Signed by '+esc(d.provider.company)+', waiting for '+esc(cp.company||'you')+'</b>Read the agreement, then sign at the bottom. It starts on the date you sign.</div></div>';
+      :'<div class="status wait">'+pen+'<div><b>Signed by '+esc(d.provider.company)+', waiting for '+esc(cp.company||'you')+'</b><span class="noprint">Read the agreement, then sign at the bottom. It starts on the date you sign.</span><span class="onlyprint">Not yet signed by '+esc(cp.company||'the client')+'.</span></div><div class="acts noprint"><button class="btn ghost" onclick="print()">Save as PDF</button></div></div>';
     const sigs='<div class="sigs">'+sigBox('For '+(d.provider.company||'Quiet Media Ltd'),d.provider,true)+(c?sigBox('For '+(c.company||cp.company||''),c,true):sigBox('For '+(cp.company||''),cp,false))+'</div>';
     const form=c?'':!intact?'<p class="err2">This agreement could not be checked, so it can’t be signed here. Please contact Quiet Media.</p>':
       '<h2 class="s noprint">Sign for '+esc(cp.company||'your company')+'</h2><div class="form noprint">'+
