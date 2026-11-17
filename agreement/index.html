@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Agreement — Quiet Media</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap">
+<style>
+/* An agreement reads like paper: light only, one column, prints to A4. The document styles (.qa) are copied from Studio's agreements.js. */
+:root{--bg:#FBFAF8;--soft:#F1EFEC;--raise:#E6E3DF;--fg:#111;--muted:#6E655E;--line:rgba(10,10,10,.1);--ok:#5F6E58;--warn:#A8662C;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-weight:300;color:var(--fg);font-size:15px;line-height:1.6;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 80px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:40px}.brand svg{width:28px;height:28px}.brand b{font-weight:300;font-size:19px;letter-spacing:-.2px}
+.err{padding:40px 0;color:var(--muted)}
+.status{display:flex;gap:14px;align-items:center;background:var(--soft);border-radius:16px;padding:14px 18px;margin-bottom:28px;font-size:14px}
+.status i{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--ok)}.status i svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.4}
+.status.wait i{background:var(--raise)}.status.wait i svg{stroke:var(--fg)}
+.status b{font-weight:500;display:block}
+.status .acts{margin:0 0 0 auto}
+.sigs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px;margin-top:40px;break-inside:avoid}
+.sbox{background:var(--soft);border-radius:16px;padding:18px 20px;break-inside:avoid}
+.lab{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+.sbox .who{font-size:16px}.sbox .who span{color:var(--muted)}
+.sbox img{display:block;width:100%;height:84px;object-fit:contain;object-position:left center;margin:10px 0 8px;border-bottom:1px solid var(--line)}
+.sbox .when{font-size:13px;color:var(--muted)}
+h2.s{font-size:23px;font-weight:300;letter-spacing:-.4px;margin:40px 0 6px}
+.form{background:var(--soft);border-radius:18px;padding:20px;margin-top:10px}
+label.f{display:grid;gap:6px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:0 12px}
+input[type=text],input[type=email]{font:inherit;font-size:16px;color:var(--fg);background:#fff;border:0;border-radius:12px;padding:13px 14px;width:100%;text-transform:none;letter-spacing:0}
+input:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.pad{position:relative;background:#fff;border-radius:14px;height:170px;touch-action:none;overflow:hidden}
+.pad canvas{position:absolute;inset:0;width:100%;height:100%}
+.pad .base{position:absolute;left:16px;right:16px;bottom:40px;border-top:1px dashed rgba(10,10,10,.25)}
+.pad .hint{position:absolute;left:16px;bottom:14px;font-size:12px;color:var(--muted);pointer-events:none;transition:opacity .2s}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:14px;line-height:1.5}
+.check input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--fg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:999px;background:var(--fg);color:#fff;text-decoration:none;font:inherit;font-size:14px;font-weight:500;border:0;cursor:pointer;min-height:48px}
+.btn.ghost{background:var(--raise);color:var(--fg)}
+.btn[disabled]{opacity:.35;cursor:default}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font:inherit;font-size:14px;cursor:pointer;padding:6px 0}
+.err2{color:var(--warn);font-size:14px;margin-top:12px}
+.audit{margin-top:28px;font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:16px;break-inside:avoid}
+.audit dl{display:grid;grid-template-columns:auto 1fr;gap:2px 16px;margin-top:8px}.audit dd{min-width:0;overflow-wrap:anywhere}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
+/* document styles, from Studio agreements.js */
+.qa{--qa-ink:#111;--qa-muted:#6E655E;--qa-soft:#F1EFEC;--qa-line:rgba(10,10,10,.1);--qa-accent:#B08D57;color:var(--qa-ink);font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-weight:300;font-size:15px;line-height:1.65}
+.qa *{box-sizing:border-box}
+.qa p,.qa ul,.qa ol,.qa h1,.qa h2{margin:0}
+.qa b{font-weight:500}
+.qa .qa-head{margin:8px 0 28px}
+.qa .qa-eye,.qa .qa-lab{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--qa-muted)}
+.qa h1{font-size:clamp(30px,6vw,46px);font-weight:300;letter-spacing:-1.2px;line-height:1.05;margin:10px 0 8px;text-wrap:balance}
+.qa .qa-sub{color:var(--qa-muted);font-size:16px}
+.qa .qa-parties{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:10px;margin-bottom:34px}
+.qa .qa-box{background:var(--qa-soft);border-radius:16px;padding:18px 20px;break-inside:avoid}
+.qa .qa-box .qa-lab{margin-bottom:8px}
+.qa .qa-box p+p{font-size:14px;line-height:1.75}
+.qa h2{font-size:23px;font-weight:300;letter-spacing:-.4px;margin:34px 0 12px;break-after:avoid}
+.qa h2 span{color:var(--qa-accent)}
+.qa p+p,.qa ul+p,.qa ol+p,.qa p+ul,.qa p+ol,.qa .qa-call,.qa .qa-tbl,.qa p+.qa-call,.qa .qa-tbl+p,.qa .qa-call+p{margin-top:12px}
+.qa ul,.qa ol{padding-left:22px}
+.qa li{margin:4px 0}.qa li::marker{color:var(--qa-muted)}
+.qa li ul{margin-top:4px;list-style:circle}
+.qa .qa-call{background:var(--qa-soft);border-radius:16px;padding:18px 20px;break-inside:avoid}
+.qa .qa-call p+p{margin-top:10px}
+.qa .qa-call .qa-lab+p{margin-top:8px}
+.qa .qa-tbl{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:14px}
+.qa .qa-tbl th{text-align:left;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--qa-muted);padding:0 14px 2px;vertical-align:bottom}
+.qa .qa-tbl td{background:var(--qa-soft);padding:11px 14px;vertical-align:top}
+.qa .qa-tbl td:first-child{border-radius:12px 0 0 12px}.qa .qa-tbl td:last-child{border-radius:0 12px 12px 0}
+.qa .qa-tbl tr{break-inside:avoid}
+@media (max-width:520px){.qa .qa-tbl thead{display:none}.qa .qa-tbl,.qa .qa-tbl tbody,.qa .qa-tbl tr,.qa .qa-tbl td{display:block}.qa .qa-tbl tr{margin-bottom:6px}
+  .qa .qa-tbl td:first-child{border-radius:12px 12px 0 0;padding-bottom:4px}.qa .qa-tbl td:last-child{border-radius:0 0 12px 12px;padding-top:4px}
+  .qa .qa-tbl td::before{content:attr(data-l);display:block;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--qa-muted)}}
+@media print{
+  @page{size:A4;margin:16mm 16mm 18mm}
+  body{padding:0;font-size:12.5px}.wrap{max-width:none;padding:0}
+  .noprint{display:none!important}
+  .brand{margin-bottom:24px}
+  .qa{font-size:12.5px}.qa h2{font-size:19px;margin-top:24px}
+  .qa .qa-box,.qa .qa-call,.qa .qa-tbl td,.sbox,.status{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><svg viewBox="0 0 400 400" aria-hidden="true"><path d="M 296.555 343.549 A 173 173 0 1 1 343.549 296.555 L 302.822 255.828 A 117 117 0 1 0 255.828 302.822 L 296.555 343.549 Z" fill="currentColor"/></svg><b>quiet media</b></div>
+  <div id="app"><p class="err">Loading…</p></div>
+</div>
+<script>
+(async function(){
+  const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';
+  const rpc=async(fn,args)=>{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)});if(!r.ok){let m='';try{m=(await r.json()).message||''}catch(e){}throw new Error(m||('Error '+r.status))}return r.json()};
+  const app=document.getElementById('app');
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fail=m=>{app.innerHTML='<p class="err">'+m+'</p>'};
+  const when=t=>{const d=new Date(t);return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+' at '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZoneName:'short'})};
+  const day=t=>new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const sha256=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const tick='<i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>';
+  const pen='<i><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></i>';
+
+  const h=location.hash.slice(1);const dot=h.indexOf('.');if(dot<0)return fail('This link is incomplete. Ask for it to be sent again.');
+  const id=h.slice(0,dot),key=h.slice(dot+1);if(!/^[A-Za-z0-9_-]{6,40}$/.test(id)||!/^[A-Za-z0-9_-]{10,100}$/.test(key))return fail('This link is not valid.');
+  const own=new URLSearchParams(location.search).has('own');
+  let d;try{d=await rpc('get_agreement',{p_id:id,p_token:key,p_count:!own})}catch(e){return fail('This agreement could not be loaded. Check your connection and try again.')}
+  if(!d||!d.doc_html)return fail('This link is no longer valid. Ask Quiet Media to send it again.');
+  const intact=(await sha256(d.doc_html))===d.doc_hash;
+  document.title=d.title+' — Quiet Media';
+
+  const sigBox=(lab,p,signed)=>'<div class="sbox"><span class="lab">'+esc(lab)+'</span><div class="who">'+esc(p.name)+(p.role?'<span>, '+esc(p.role)+'</span>':'')+'</div>'+(signed?'<img alt="Signature of '+esc(p.name)+'" src="'+esc(p.sig)+'"><div class="when">Signed '+esc(when(p.signed_at))+'</div>':'')+'</div>';
+  const cp=d.counterparty||{};
+  function render(){
+    const c=d.client;
+    const status=c?'<div class="status">'+tick+'<div><b>Signed by both parties</b>In effect from '+esc(day(c.signed_at))+'.</div><div class="acts noprint"><button class="btn ghost" onclick="print()">Save as PDF</button></div></div>'
+      :'<div class="status wait noprint">'+pen+'<div><b>Signed by '+esc(d.provider.company)+', waiting for '+esc(cp.company||'you')+'</b>Read the agreement, then sign at the bottom. It starts on the date you sign.</div></div>';
+    const sigs='<div class="sigs">'+sigBox('For '+(d.provider.company||'Quiet Media Ltd'),d.provider,true)+(c?sigBox('For '+(c.company||cp.company||''),c,true):sigBox('For '+(cp.company||''),cp,false))+'</div>';
+    const form=c?'':!intact?'<p class="err2">This agreement could not be checked, so it can’t be signed here. Please contact Quiet Media.</p>':
+      '<h2 class="s noprint">Sign for '+esc(cp.company||'your company')+'</h2><div class="form noprint">'+
+      '<div class="grid2"><label class="f">Full name<input type="text" id="nm" autocomplete="name" value="'+esc(cp.name||'')+'"></label><label class="f">Position<input type="text" id="rl" autocomplete="organization-title" value="'+esc(cp.role||'')+'"></label></div>'+
+      '<label class="f">Email<input type="email" id="em" autocomplete="email" inputmode="email" placeholder="So we have a record of who signed"></label>'+
+      '<label class="f" for="sigc">Signature</label><div class="pad" id="pad"><div class="base"></div><span class="hint">Sign with your finger or mouse</span><canvas id="sigc" aria-label="Signature pad"></canvas></div>'+
+      '<div style="display:flex;justify-content:flex-end"><button class="link" id="clr" type="button">Clear</button></div>'+
+      '<label class="check"><input type="checkbox" id="ok"><span>I have read this agreement. I agree to it on behalf of '+esc(cp.company||'my company')+', and I am authorised to sign for it.</span></label>'+
+      '<div class="acts"><button class="btn" id="go" disabled>Sign agreement</button></div><p style="font-size:12px;color:var(--muted);margin-top:12px">Your name, signature, email, the time, your IP address and device are recorded with the agreement.</p></div>';
+    const audit='<div class="audit"><b style="font-weight:500">Signing record</b><dl>'+
+      '<dt>Agreement</dt><dd>'+esc(d.title)+' · ref '+esc(d.id)+'</dd>'+
+      '<dt>Text fingerprint</dt><dd class="mono">SHA-256 '+esc(d.doc_hash)+(intact?' · checked on this page':' · does not match')+'</dd>'+
+      '<dt>'+esc(d.provider.company)+'</dt><dd>'+esc(d.provider.name)+', '+esc(when(d.provider.signed_at))+'</dd>'+
+      (c?'<dt>'+esc(c.company)+'</dt><dd>'+esc(c.name)+' ('+esc(c.email)+'), '+esc(when(c.signed_at))+(c.ip?' · IP '+esc(c.ip):'')+(c.ua?'<br><span class="mono">'+esc(c.ua)+'</span>':'')+'</dd>':'')+
+      '</dl><p style="margin-top:8px">Signed electronically. Each signature is stored with the time it was made, and the client’s with their IP address and device, against the fingerprint of the text above. The text can’t be changed after signing.</p></div>';
+    app.innerHTML=status+'<article class="qa">'+d.doc_html+'</article>'+sigs+form+audit;
+    if(!c&&intact)wire();
+  }
+  function wire(){
+    const box=document.getElementById('pad'),cv=box.querySelector('canvas');let pts=0,down=false,lx=0,ly=0;
+    const r=box.getBoundingClientRect(),k=devicePixelRatio||1;cv.width=r.width*k;cv.height=r.height*k;const ctx=cv.getContext('2d');ctx.scale(k,k);ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#111';
+    const pos=e=>{const b=cv.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top]};
+    const nm=document.getElementById('nm'),em=document.getElementById('em'),ok=document.getElementById('ok'),go=document.getElementById('go'),hint=box.querySelector('.hint');
+    const check=()=>{go.disabled=!(pts>8&&ok.checked&&nm.value.trim().length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value.trim()))};
+    [nm,em].forEach(x=>x.oninput=check);ok.onchange=check;
+    cv.addEventListener('pointerdown',e=>{down=true;cv.setPointerCapture(e.pointerId);[lx,ly]=pos(e);hint.style.opacity=0});
+    cv.addEventListener('pointermove',e=>{if(!down)return;const [x,y]=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke();lx=x;ly=y;pts++;check()});
+    ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,()=>down=false));
+    document.getElementById('clr').onclick=()=>{ctx.clearRect(0,0,cv.width,cv.height);pts=0;hint.style.opacity=1;check()};
+    const sig=()=>{const s=Math.min(1,600/cv.width);const c2=document.createElement('canvas');c2.width=Math.round(cv.width*s);c2.height=Math.round(cv.height*s);c2.getContext('2d').drawImage(cv,0,0,c2.width,c2.height);return c2.toDataURL('image/png')};
+    go.onclick=async()=>{go.disabled=true;go.textContent='Signing…';const er=app.querySelector('.err2');if(er)er.remove();
+      try{const res=await rpc('sign_agreement',{p_id:id,p_token:key,p_data:{agreed:true,doc_hash:d.doc_hash,name:nm.value.trim(),role:document.getElementById('rl').value.trim(),email:em.value.trim(),sig:sig(),ua:navigator.userAgent.slice(0,200)}});
+        if(res&&res.client){d=res;render();window.scrollTo({top:0,behavior:'smooth'})}else throw new Error('no reply')}
+      catch(e){go.disabled=false;go.textContent='Sign agreement';go.parentNode.insertAdjacentHTML('afterend','<p class="err2">Could not sign: '+esc(e.message)+'. Please try again.</p>')}};
+  }
+  render();
+})();
+</script>
+</body>
+</html>
