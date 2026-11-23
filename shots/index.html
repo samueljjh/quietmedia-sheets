@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shot list · Quiet Media</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap">
+<style>
+/* The crew's shot list: the same view Studio shows, opened by private link. Tick shots, log grabs, add notes; it updates live. */
+:root{--bg:#0A0A0A;--surface:#141413;--raise:#1D1C1A;--fg:#FFFFFF;--muted:#9A918A;--line:rgba(255,255,255,.07);--line-strong:rgba(255,255,255,.16);--tan:#8A7F76;--sand:#DDD5C3;--warn:#C9894E;--ok:#A7B3A0;--danger:#C46A5A;--font:'DM Sans','Helvetica Neue',Arial,sans-serif;color-scheme:dark}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F5F4F2;--surface:#FFFFFF;--raise:#EEECEA;--fg:#0A0A0A;--muted:#6E655E;--line:rgba(10,10,10,.07);--line-strong:rgba(10,10,10,.18);--tan:#7A6F66;--sand:#8A7F76;--warn:#A8662C;--ok:#5F6E58;--danger:#A64838;color-scheme:light}}
+*{box-sizing:border-box}
+html,body{background:var(--bg);margin:0}
+body{font-family:var(--font);font-weight:300;color:var(--fg);-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0px)}
+.err{max-width:680px;margin:0 auto;padding:56px 16px;color:var(--muted);font-size:16px}
+</style>
+</head>
+<body>
+<div id="app"><p class="err">Loading…</p></div>
+<script src="../shots.js"></script>
+<script>
+(function(){
+  /* Reads and writes go through the database functions in the Studio repo (supabase/shots.sql), each checked against the key in the link.
+     What you tick is shown straight away and sent in order; if the signal drops it waits on this device and sends when it is back.
+     Every few seconds the page asks for anything that changed, so everyone on the link sees the same list. */
+  const SB='https://jxfnzlwwsvfcrstxpgzr.supabase.co',SBK='sb_publishable_tQiBC9EehadDkCdVhsqzUQ__7FfYpEV';
+  const app=document.getElementById('app');
+  const fail=m=>{app.innerHTML='<p class="err">'+m+'</p>'};
+  const h=location.hash.slice(1);const dot=h.indexOf('.');
+  if(dot<0)return fail('This link is incomplete. Ask for it to be sent again.');
+  const id=h.slice(0,dot),key=h.slice(dot+1);
+  if(!/^[A-Za-z0-9_-]+$/.test(id))return fail('This link is not valid.');
+  async function rpc(fn,args){let r;try{r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SBK,Authorization:'Bearer '+SBK},body:JSON.stringify(args)})}catch(e){throw Object.assign(new Error('offline'),{net:true})}
+    if(!r.ok){let m='';try{m=(await r.json()).message||''}catch(e){}throw Object.assign(new Error(m||('Error '+r.status)),{net:r.status>=500||r.status===429})}return r.json()}
+  const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  const ls={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+  const CK='qm-sl-'+id,QK='qm-slq-'+id;
+  const D=ls.get(CK,null)||{list:null,shots:{},notes:{},have:{}};
+  let Q=ls.get(QK,[]);let net='ok',gone=false,busy=false,first=!D.list;const UN=[];
+  let saveT=null;const save=()=>{clearTimeout(saveT);saveT=setTimeout(()=>ls.set(CK,D),200)};
+  const saveQ=()=>ls.set(QK,Q);
+  const pend=()=>{const s={};Q.forEach(o=>{if(o.ref)s[o.ref]=1});return s};
+  function apply(res){const p=pend();
+    if(res.list){D.list=res.list;D.have[id]=res.u}
+    (res.rows||[]).forEach(r=>{if(p[r.id])return;(r.col==='shots'?D.shots:D.notes)[r.id]={...r.data,id:r.id};D.have[r.id]=r.u});
+    const keep={};(res.ids||[]).forEach(x=>keep[x]=1);
+    [D.shots,D.notes].forEach(m=>Object.keys(m).forEach(k=>{if(!keep[k]&&!p[k]){delete m[k];delete D.have[k]}}));save()}
+  /* send what is waiting, oldest first; a refusal from the database is dropped and shown, a lost connection waits */
+  async function flush(){while(Q.length){const o=Q[0];try{const out=await rpc(o.fn,{p_id:id,p_token:key,...o.args});Q.shift();saveQ();if(out&&out.col==='shots'&&!pend()[out.id]){D.shots[out.id]={...out.data,id:out.id};D.have[out.id]=out.u}}
+      catch(e){if(e.net){net='offline';return false}Q.shift();saveQ();if(o.ref)delete D.have[o.ref];QMShots.toast(/no longer|not valid/.test(e.message)?'That could not be saved: '+e.message+'.':'That could not be saved. '+e.message)}}return true}
+  async function poll(){if(busy||gone)return;busy=true;
+    try{if(Q.length){net='saving';QMShots.refresh()}
+      if(await flush()){const res=await rpc('get_shotlist',{p_id:id,p_token:key,p_have:D.have});
+        if(res===null){gone=true;D.list=null;D.shots={};D.notes={};D.have={};try{localStorage.removeItem(CK)}catch(e){}}else apply(res);net='ok'}}
+    catch(e){net='offline'}
+    busy=false;if(first&&(D.list||gone)){first=false;start()}else if(!first)QMShots.refresh()}
+  function send(fn,args,ref){Q.push({fn,args,ref});saveQ();net=navigator.onLine===false?'offline':'saving';save();QMShots.refresh();poll()}
+  const A={mode:'link',can:{edit:false},missing:'This link is no longer valid. Ask for it to be sent again.',
+    list:()=>D.list?{...D.list,id}:null,shots:()=>Object.values(D.shots),notes:()=>Object.values(D.notes),
+    who:()=>ls.get('qm-sl-who',''),setWho:n=>ls.set('qm-sl-who',n),net:()=>net,
+    patchShot(sid,d,noUndo){const s=D.shots[sid];if(!s)return;const prev={};const patch={};
+      if('done' in d){prev.done=s.done||null;patch.done=d.done?{by:d.done.by||''}:null}
+      if(d.grab){const og=s.grab||{};prev.grab={focal:og.focal||'',stop:og.stop||'',focus:og.focus||'',height:og.height||'',other:og.other||''};const g={by:d.grab.by||A.who()};['focal','stop','focus','height','other'].forEach(k=>{if((d.grab[k]||'')!==(og[k]||''))g[k]=d.grab[k]||''});if(d.grab.thumb&&d.grab.thumb!==og.thumb)g.thumb=d.grab.thumb;patch.grab=g}
+      D.shots[sid]={...s,...d};if(!noUndo)UN.push(()=>A.patchShot(sid,prev.grab?{grab:{...(D.shots[sid].grab||{}),...prev.grab},...('done' in prev?{done:prev.done}:{})}:{done:prev.done},true));
+      send('update_shot',{p_shot:sid,p_patch:patch},sid)},
+    addNote(d,noUndo){const nid=id+'-n'+rid();D.notes[nid]={id:nid,listId:id,shotId:d.shotId,by:A.who(),at:Date.now(),text:d.text};if(!noUndo)UN.push(()=>A.removeNote(nid,true));
+      send('note_shot',{p_note:nid,p_shot:d.shotId,p_by:A.who(),p_text:d.text},nid)},
+    removeNote(nid,noUndo){const n=D.notes[nid];if(!n)return;delete D.notes[nid];if(!noUndo)UN.push(()=>A.addNote({shotId:n.shotId,text:n.text},true));
+      send('note_shot',{p_note:nid,p_shot:null,p_by:null,p_text:null},nid)},
+    checkItem(k,iid,done,noUndo){if(!D.list)return;D.list={...D.list,[k]:(D.list[k]||[]).map(x=>x.id===iid?{...x,done,by:done?A.who():''}:x)};if(!noUndo)UN.push(()=>A.checkItem(k,iid,!done,true));
+      delete D.have[id];send('check_shotlist',{p_kind:k,p_item:iid,p_done:done,p_by:A.who()},id)},
+    saveGrab:(sid,img)=>rpc('put_shot_grab',{p_id:id,p_token:key,p_shot:sid,p_img:img}),
+    loadGrab:sid=>rpc('get_shot_grab',{p_id:id,p_token:key,p_shot:sid}),
+    undo(){const f=UN.pop();if(f){f();QMShots.toast('Undone')}},canUndo:()=>UN.length>0};
+  function start(){app.innerHTML='';QMShots.mount(app,A);document.title=(D.list?D.list.title+' · ':'')+'Shot list · Quiet Media'}
+  if(D.list)start();
+  poll();setInterval(()=>{if(document.visibilityState==='visible')poll()},3000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')poll()});
+  window.addEventListener('online',poll);window.addEventListener('offline',()=>{net='offline';QMShots.refresh()});
+  setTimeout(()=>{if(first&&!D.list&&!gone)fail('This shot list could not be loaded. Check your connection; it will keep trying.')},8000);
+})();
+</script>
+</body>
+</html>
